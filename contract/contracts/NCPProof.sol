@@ -15,7 +15,7 @@ contract NCPProof is ERC721, Ownable {
 
     string private _strBaseTokenURI;
 
-    event MintNFT(address indexed _to, uint256 _number);
+    event MintNFT(address indexed _to);
 
     constructor() ERC721("NFT Content Player Proof", "NCPP") {
         _strBaseTokenURI = "https://gateway.pinata.cloud/ipfs/Qmdbpbpy7fA99UkgusTiLhMWzyd3aETeCFrz7NpYaNi6zY/";
@@ -29,16 +29,16 @@ contract NCPProof is ERC721, Ownable {
         return 1000;
     }
 
-    function price() public view returns (uint256) {
+    function price() public pure returns (uint256) {
         return 5 * 10**16;
     }
 
-    function safeMint(address to, uint256 number) public onlyOwner {
+    function safeMint(address to) public onlyOwner {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
 
-        emit MintNFT(to, number);
+        emit MintNFT(to);
         // _setTokenURI(tokenId, tokenURI(tokenId));
     }
 
@@ -74,7 +74,7 @@ contract NCPProof is ERC721, Ownable {
 
         _mint(recipiant, newItemid);
 
-        emit MintNFT(recipiant, number);
+        emit MintNFT(recipiant);
     }
 
     function count() public view returns (uint256) {
