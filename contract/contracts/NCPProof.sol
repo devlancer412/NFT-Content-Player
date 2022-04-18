@@ -2,41 +2,31 @@
 pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
-contract NCPProof is ERC721, Ownable {
+contract NCPProof is ERC721URIStorage, Ownable  {
     using Counters for Counters.Counter;
     using Strings for uint256;
 
     Counters.Counter private _tokenIdCounter;
 
-    string private _strBaseTokenURI;
-
     event MintNFT(address indexed _to);
 
     constructor() ERC721("NFT Content Player Proof", "NCPP") {
-        _strBaseTokenURI = "https://gateway.pinata.cloud/ipfs/Qmdbpbpy7fA99UkgusTiLhMWzyd3aETeCFrz7NpYaNi6zY/";
-    }
-
-    function _baseURI() internal view override returns (string memory) {
-        return _strBaseTokenURI;
-    }
-
-    function totalCount() public pure returns (uint256) {
-        return 1000;
     }
 
     function price() public pure returns (uint256) {
         return 5 * 10**16;
     }
 
-    function safeMint(address to) public onlyOwner {
+    function safeMint(address to, string memory uri) public onlyOwner {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
+        _setTokenURI(tokenId, uri);
 
         emit MintNFT(to);
         // _setTokenURI(tokenId, tokenURI(tokenId));
@@ -46,35 +36,19 @@ contract NCPProof is ERC721, Ownable {
         super._burn(_tokenId);
     }
 
-    function tokenURI(uint256 tokenId)
-        public
-        view
-        override
-        returns (string memory)
-    {
-        require(
-            _exists(tokenId),
-            "ERC721Metadata: URI query for nonexistent token"
-        );
-
-        string memory baseURI = _baseURI();
-        return
-            bytes(baseURI).length > 0
-                ? string(abi.encodePacked(baseURI, tokenId.toString(), ".json"))
-                : "";
-    }
-
-    function payToMint(address recipiant) public payable {
-        require(_tokenIdCounter.current() <= totalCount(), "All NFT minted!");
-        require(balanceOf(recipiant) == 0, "Already minted");
+    function payToMint(address recipiant, string memory uri) public payable returns(uint256) {
+        require(!hasNFT(recipiant, uri), "NFT already minted");
         require(msg.value >= price(), "Need to pay up!");
 
-        uint256 newItemid = _tokenIdCounter.current();
+        uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
 
-        _mint(recipiant, newItemid);
+        _mint(recipiant, tokenId);
+        _setTokenURI(tokenId, uri);
 
         emit MintNFT(recipiant);
+
+        return tokenId;
     }
 
     function count() public view returns (uint256) {
@@ -85,7 +59,19 @@ contract NCPProof is ERC721, Ownable {
         payable(msg.sender).transfer(address(this).balance);
     }
 
-    function _leaf(address account) internal pure returns (bytes32) {
-        return keccak256(abi.encodePacked(account));
+    function hasNFT(address owner, string memory uri) public view returns(bool) {
+        uint totalSupply = _tokenIdCounter.current();
+
+        for (uint i = 0; i < totalSupply; i++) {
+            if (ownerOf(i) == owner && compareStrings(tokenURI(i), uri)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    function compareStrings(string memory a, string memory b) public view returns (bool) {
+        return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));
     }
 }

@@ -2,7 +2,7 @@ const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
 describe("NCP-Proof", function () {
-  it("Should return the new greeting once it's changed", async function () {
+  it("Should return true for NFT uri", async function () {
     const Proof = await ethers.getContractFactory("NCPProof");
     const proof = await Proof.deploy();
     await proof.deployed();
@@ -10,7 +10,7 @@ describe("NCP-Proof", function () {
     const [owner] = await ethers.getSigners();
     expect(await proof.balanceOf(owner.address)).to.equal(0);
 
-    const setTx = await greeter.payToMint(owner.address, {
+    const setTx = await proof.payToMint(owner.address, "aaaa", {
       value: ethers.utils.parseEther("0.05"),
     });
 
@@ -18,5 +18,10 @@ describe("NCP-Proof", function () {
     await setTx.wait();
 
     expect(await proof.balanceOf(owner.address)).to.equal(1);
+
+    expect(await proof.hasNFT(owner.address, "aaaa")).to.equal(true);
+    expect(await proof.hasNFT(owner.address, "aaab")).to.equal(false);
+
+    // console.log(await proof.tokenURI(tokenID));
   });
 });
