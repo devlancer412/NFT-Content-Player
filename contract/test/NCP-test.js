@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
-describe("NCP-Proof", function () {
+describe("NCP", function () {
   it("Should return true for NFT uri", async function () {
     const Proof = await ethers.getContractFactory("NCPProof");
     const proof = await Proof.deploy();
@@ -21,5 +21,19 @@ describe("NCP-Proof", function () {
 
     expect(await proof.hasNFT(owner.address, "aaaa")).to.equal(true);
     expect(await proof.hasNFT(owner.address, "aaab")).to.equal(false);
+  });
+
+  it("Should return true for NFT uri", async function () {
+    const Reward = await ethers.getContractFactory("NCPReward");
+    const reward = await Reward.deploy();
+    await reward.deployed();
+
+    const [owner] = await ethers.getSigners();
+    const balance = await reward.balanceOf(owner.address);
+    console.log(balance.toString());
+
+    const totalSupply = await reward.totalSupply();
+    console.log(totalSupply.toString());
+    // console.log(await reward.tokenURI(tokenID));
   });
 });

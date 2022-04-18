@@ -20,6 +20,13 @@ async function main() {
   await proof.deployed();
 
   console.log("NFT-Content-Player-Proof deployed to:", proof.address);
+
+  const Reward = await hre.ethers.getContractFactory("NCPReward");
+  const reward = await Reward.deploy();
+
+  await reward.deployed();
+
+  console.log("NFT-Content-Player-Reward deployed to:", reward.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
