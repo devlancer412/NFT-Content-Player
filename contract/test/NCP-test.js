@@ -34,6 +34,5 @@ describe("NCP", function () {
 
     const totalSupply = await reward.totalSupply();
     console.log(totalSupply.toString());
-    // console.log(await reward.tokenURI(tokenID));
   });
 });
