@@ -21,7 +21,5 @@ describe("NCP-Proof", function () {
 
     expect(await proof.hasNFT(owner.address, "aaaa")).to.equal(true);
     expect(await proof.hasNFT(owner.address, "aaab")).to.equal(false);
-
-    // console.log(await proof.tokenURI(tokenID));
   });
 });
