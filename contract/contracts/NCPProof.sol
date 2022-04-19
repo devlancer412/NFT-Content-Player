@@ -3,67 +3,67 @@ pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
-contract NCPProof is ERC721URIStorage, Ownable  {
+contract NCPProof is ERC721, Ownable  {
     using Counters for Counters.Counter;
     using Strings for uint256;
 
     Counters.Counter private _tokenIdCounter;
+    Counters.Counter private _contentIdCounter;
 
-    event MintNFT(address indexed _to);
+    mapping(address => bool) private _contentServers;
+    // nftId -> contentId
+    mapping(uint256 => uint256) private _nftContentId;
+    // contentId -> address
+    mapping(uint256 => address) private _distributionOwner;
+
+    string private _strBaseTokenURI;
+
+    event MintNFT(address indexed _to, uint256 _contentId);
 
     constructor() ERC721("NFT Content Player Proof", "NCPP") {
     }
 
-    function price() public pure returns (uint256) {
-        return 5 * 10**16;
+    // Set an address as a content server, aka, they can create signatures that allows
+    // the calling of newContent()
+    function setContentServer(address contentServer, bool set) public onlyOwner {
+        _contentServers[contentServer] = set;
     }
 
-    function safeMint(address to, string memory uri) public onlyOwner {
-        uint256 tokenId = _tokenIdCounter.current();
-        _tokenIdCounter.increment();
-        _safeMint(to, tokenId);
-        _setTokenURI(tokenId, uri);
+    function newContentId() public onlyOwner returns(uint256) {
+        uint256 contentId = _contentIdCounter.current();
+        _contentIdCounter.increment();
 
-        emit MintNFT(to);
-        // _setTokenURI(tokenId, tokenURI(tokenId));
+        return contentId;
     }
 
-    function _burn(uint256 _tokenId) internal override {
-        super._burn(_tokenId);
+    // Add content to owner
+    function newContent(uint256 contentId, address owner, bytes32 r, bytes32 s, uint8 v) public {
+        // signature verify keccak256(abi.encodePacked(contentId, owner))
+        require(_distributionOwner[contentId] == address(0), "Content already added");
+
+        require(uint256(s) <= 0x7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0,
+            "invalid signature 's' value");
+        require(v == 27 || v == 28, "invalid signature 'v' value");
+
+        address signer = ecrecover(keccak256(abi.encodePacked(contentId, owner)), v, r, s);
+
+        require(signer != address(0), "invalid signature");
+
+        require(_contentServers[signer], "Can't create content because you are not content server");
+
+        _distributionOwner[contentId] = owner;
     }
 
-    function payToMint(address recipiant, string memory uri) public payable returns(uint256) {
-        require(!hasNFT(recipiant, uri), "NFT already minted");
-        require(msg.value >= price(), "Need to pay up!");
+    function transferContentRights(uint256 contentId, address newOwner) public returns(bool) {
+        uint256 total = countOfNFT();
 
-        uint256 tokenId = _tokenIdCounter.current();
-        _tokenIdCounter.increment();
-
-        _mint(recipiant, tokenId);
-        _setTokenURI(tokenId, uri);
-
-        emit MintNFT(recipiant);
-
-        return tokenId;
-    }
-
-    function count() public view returns (uint256) {
-        return _tokenIdCounter.current();
-    }
-
-    function withdraw() public onlyOwner {
-        payable(msg.sender).transfer(address(this).balance);
-    }
-
-    function hasNFT(address owner, string memory uri) public view returns(bool) {
-        uint totalSupply = _tokenIdCounter.current();
-
-        for (uint i = 0; i < totalSupply; i++) {
-            if (ownerOf(i) == owner && compareStrings(tokenURI(i), uri)) {
+        for (uint256 token = 0; token < total; token++) {
+            if (ownerOf(token) == msg.sender && contentOf(token) == contentId) {
+                _transfer(msg.sender, newOwner, token);
                 return true;
             }
         }
@@ -71,7 +71,70 @@ contract NCPProof is ERC721URIStorage, Ownable  {
         return false;
     }
 
-    function compareStrings(string memory a, string memory b) public view returns (bool) {
-        return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));
+    function mint(address to, uint256 contentId) public returns(uint256){
+        require(contentDistributorOf(contentId) == msg.sender, "You can't mint this NFT");
+        require(!hasNFTForContent(to, contentId), "NFT already minted");
+
+        uint256 tokenId = _tokenIdCounter.current();
+        _tokenIdCounter.increment();
+
+        _mint(to, tokenId);
+
+        emit MintNFT(to, contentId);
+
+        return tokenId;
+    }
+
+    function hasNFTForContent(address owner, uint256 contentId) public view returns(bool) {
+        uint256 total = countOfNFT();
+
+        for (uint256 token = 0; token < total; token++) {
+            if (ownerOf(token) == owner && contentOf(token) == contentId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    function contentOf(uint256 tokenId) public view returns(uint256) {
+        return _nftContentId[tokenId];
+    }
+
+    function contentDistributorOf(uint256 contentId) public view returns(address) {
+        return _distributionOwner[contentId];
+    }
+
+    function _burn(uint256 tokenId) internal override {
+        super._burn(tokenId);
+    }
+
+    function countOfNFT() public view returns (uint256) {
+        return _tokenIdCounter.current();
+    }
+
+    function countOfContent() public view returns (uint256) {
+        return _contentIdCounter.current();
+    }
+
+    function withdraw() public onlyOwner {
+        payable(msg.sender).transfer(address(this).balance);
+    }
+
+    function _baseURI() internal view override returns (string memory) {
+        return _strBaseTokenURI;
+    }
+
+    function tokenURI(uint256 tokenId) public view override returns (string memory) {
+        require(
+            _exists(tokenId),
+            "ERC721Metadata: URI query for nonexistent token"
+        );
+
+        string memory baseURI = _baseURI();
+        return
+            bytes(baseURI).length > 0
+                ? string(abi.encodePacked(baseURI, contentOf(tokenId).toString(), ".json"))
+                : "";
     }
 }
