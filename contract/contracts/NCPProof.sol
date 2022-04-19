@@ -25,8 +25,12 @@ contract NCPProof is ERC721, Ownable  {
     event MintNFT(address indexed _to, uint256 _contentId);
 
     constructor() ERC721("NFT Content Player Proof", "NCPP") {
+        _strBaseTokenURI = "https://ipfs/";
     }
 
+    function setBaseTokenURI(string memory baseURI) public onlyOwner {
+        _strBaseTokenURI = baseURI;
+    }
     // Set an address as a content server, aka, they can create signatures that allows
     // the calling of newContent()
     function setContentServer(address contentServer, bool set) public onlyOwner {
@@ -41,7 +45,7 @@ contract NCPProof is ERC721, Ownable  {
     }
 
     // Add content to owner
-    function newContent(uint256 contentId, address owner, bytes32 r, bytes32 s, uint8 v) public {
+    function newContent(uint256 contentId, address contentOwner, bytes32 r, bytes32 s, uint8 v) public {
         // signature verify keccak256(abi.encodePacked(contentId, owner))
         require(_distributionOwner[contentId] == address(0), "Content already added");
 
@@ -49,13 +53,13 @@ contract NCPProof is ERC721, Ownable  {
             "invalid signature 's' value");
         require(v == 27 || v == 28, "invalid signature 'v' value");
 
-        address signer = ecrecover(keccak256(abi.encodePacked(contentId, owner)), v, r, s);
+        address signer = ecrecover(keccak256(abi.encodePacked(contentId, contentOwner)), v, r, s);
 
         require(signer != address(0), "invalid signature");
 
-        require(_contentServers[signer], "Can't create content because you are not content server");
+        require(signer == owner(), "Can't create content because you are not content server");
 
-        _distributionOwner[contentId] = owner;
+        _distributionOwner[contentId] = contentOwner;
     }
 
     function transferContentRights(uint256 contentId, address newOwner) public returns(bool) {
