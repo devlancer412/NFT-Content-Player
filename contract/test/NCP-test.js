@@ -8,19 +8,6 @@ describe("NCP", function () {
     await proof.deployed();
 
     const [owner] = await ethers.getSigners();
-    expect(await proof.balanceOf(owner.address)).to.equal(0);
-
-    const setTx = await proof.payToMint(owner.address, "aaaa", {
-      value: ethers.utils.parseEther("0.05"),
-    });
-
-    // wait until the transaction is mined
-    await setTx.wait();
-
-    expect(await proof.balanceOf(owner.address)).to.equal(1);
-
-    expect(await proof.hasNFT(owner.address, "aaaa")).to.equal(true);
-    expect(await proof.hasNFT(owner.address, "aaab")).to.equal(false);
   });
 
   it("Should return true for NFT uri", async function () {

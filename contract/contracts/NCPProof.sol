@@ -49,15 +49,9 @@ contract NCPProof is ERC721, Ownable  {
         // signature verify keccak256(abi.encodePacked(contentId, owner))
         require(_distributionOwner[contentId] == address(0), "Content already added");
 
-        require(uint256(s) <= 0x7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0,
-            "invalid signature 's' value");
-        require(v == 27 || v == 28, "invalid signature 'v' value");
-
         address signer = ecrecover(keccak256(abi.encodePacked(contentId, contentOwner)), v, r, s);
 
-        require(signer != address(0), "invalid signature");
-
-        require(signer == owner(), "Can't create content because you are not content server");
+        require(_contentServers[signer], "Can't create content because you are not content server");
 
         _distributionOwner[contentId] = contentOwner;
     }
