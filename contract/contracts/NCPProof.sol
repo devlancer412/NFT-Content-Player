@@ -31,10 +31,15 @@ contract NCPProof is ERC721, Ownable  {
     function setBaseTokenURI(string memory baseURI) public onlyOwner {
         _strBaseTokenURI = baseURI;
     }
+
     // Set an address as a content server, aka, they can create signatures that allows
     // the calling of newContent()
     function setContentServer(address contentServer, bool set) public onlyOwner {
         _contentServers[contentServer] = set;
+    }
+
+    function isContentServer(address addr) public view onlyOwner returns(bool) {
+        return _contentServers[addr];
     }
 
     function newContentId() public onlyOwner returns(uint256) {
