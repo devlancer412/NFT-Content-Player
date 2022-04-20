@@ -15,8 +15,6 @@ describe("NCP", function () {
   let addr1;
   let addr2;
   let addrs;
-  const privateKeyOfOwner =
-    "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
   beforeEach(async function () {
     const Proof = await ethers.getContractFactory("NCPProof");
@@ -34,27 +32,57 @@ describe("NCP", function () {
   });
 
   it("Set addr1 to distributor server", async function () {
-    const address1 = addr1.address;
+    await proof.setContentServer(owner.address, true);
 
     const contentId = (await proof.newContentId()).value.toNumber();
     expect(contentId).to.equal(0);
 
-    const issuerWallet = new Wallet(privateKeyOfOwner);
-
-    const hash = solidityKeccak256(
-      ["uint256", "address"],
-      [contentId, address1]
+    let messageHash = ethers.utils.solidityKeccak256(
+      ["address", "uint"],
+      [addr1.address, contentId]
     );
 
-    console.log(hash);
+    let messageHashBinary = ethers.utils.arrayify(messageHash);
 
-    const signature = await issuerWallet.signMessage(arrayify(hash));
+    let signature = await owner.signMessage(messageHashBinary);
 
-    const { v, r, s } = splitSignature(signature);
+    await proof.newContent(contentId, addr1.address, signature);
 
-    await proof.newContent(contentId, address1, r, s, v);
+    expect(await proof.contentDistributorOf(contentId)).to.equal(addr1.address);
+  });
 
-    // expect(await proof.countOfContent()).to.equal(BigNumber(1));
-    // expect(await proof.contentDistributorOf(contentId)).to.equal(address1);
+  it("Set addr2 to consumer and mint NFT to addr1, and then transfer to addr2", async function () {
+    await proof.setContentServer(owner.address, true);
+
+    const contentId = (await proof.newContentId()).value.toNumber();
+
+    let messageHash = ethers.utils.solidityKeccak256(
+      ["address", "uint"],
+      [addr1.address, contentId]
+    );
+
+    let messageHashBinary = ethers.utils.arrayify(messageHash);
+
+    let signature = await owner.signMessage(messageHashBinary);
+
+    await proof.newContent(contentId, addr1.address, signature);
+
+    await proof.connect(addr1).mint(addr1.address, contentId);
+
+    expect(await proof.hasNFTForContent(addr1.address, contentId)).to.equal(
+      true
+    );
+    expect(await proof.hasNFTForContent(addr2.address, contentId)).to.equal(
+      false
+    );
+
+    await proof.connect(addr1).transferContentRights(contentId, addr2.address);
+
+    expect(await proof.hasNFTForContent(addr1.address, contentId)).to.equal(
+      false
+    );
+    expect(await proof.hasNFTForContent(addr2.address, contentId)).to.equal(
+      true
+    );
   });
 });

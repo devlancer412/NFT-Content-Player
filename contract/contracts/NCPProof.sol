@@ -6,10 +6,12 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 contract NCPProof is ERC721, Ownable  {
     using Counters for Counters.Counter;
     using Strings for uint256;
+    using ECDSA for bytes32;
 
     Counters.Counter private _tokenIdCounter;
     Counters.Counter private _contentIdCounter;
@@ -49,14 +51,20 @@ contract NCPProof is ERC721, Ownable  {
         return contentId;
     }
 
+    function getSigner(bytes32 hash, bytes memory signature) internal view returns (address) {
+        bytes32 signedHash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", hash));
+        return signedHash.recover(signature);
+    }
+
     // Add content to owner
-    function newContent(uint256 contentId, address contentOwner, bytes32 r, bytes32 s, uint8 v) public {
+    function newContent(uint256 contentId, address contentOwner, bytes memory signature) public {
         // signature verify keccak256(abi.encodePacked(contentId, owner))
         require(_distributionOwner[contentId] == address(0), "Content already added");
 
-        address signer = ecrecover(keccak256(abi.encodePacked(contentId, contentOwner)), v, r, s);
+        bytes32 msgHash = keccak256(abi.encodePacked(contentOwner, contentId));
+        address signer = getSigner(msgHash, signature);
 
-        require(_contentServers[signer], "Can't create content because you are not content server");
+        require(isContentServer(signer), "Can't create content because you are not content server");
 
         _distributionOwner[contentId] = contentOwner;
     }
