@@ -41,6 +41,10 @@ contract NCPProof is ERC721, Ownable  {
     }
 
     function isContentServer(address addr) public view onlyOwner returns(bool) {
+        if (addr == owner()) {
+            return true;
+        }
+        
         return _contentServers[addr];
     }
 

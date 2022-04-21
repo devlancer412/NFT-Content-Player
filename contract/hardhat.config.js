@@ -1,4 +1,5 @@
 require("@nomiclabs/hardhat-waffle");
+const privateKey = require("./privatekey");
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -21,7 +22,7 @@ module.exports = {
   networks: {
     Rinkeby: {
       url: "https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-//      accounts: [account.privateKey],
+      accounts: [privateKey],
     },
   },
   etherscan: {

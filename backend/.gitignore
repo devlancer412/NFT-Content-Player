@@ -3,7 +3,3 @@ coverage
 coverage.json
 typechain
 privatekey.js
-
-#Hardhat files
-cache
-artifacts
