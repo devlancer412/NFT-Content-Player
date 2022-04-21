@@ -3,6 +3,7 @@ const Router = express.Router();
 const { contentController } = require("../controller");
 
 Router.get("/", contentController.index);
+Router.get("/:address", contentController.getContents);
 
 Router.get("/upload/new", contentController.newContentId);
 Router.post("/upload/:contentId/blob", contentController.newBlobUpload);

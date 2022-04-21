@@ -110,7 +110,7 @@ exports.newContent = async (req, res) => {
       return res.status(404).json("Can't find such Content");
     }
 
-    const { r, s, v } = await contractApi.getNewContractSinature(
+    const signature = await contractApi.getNewContractSinature(
       address,
       contentId
     );
@@ -119,7 +119,7 @@ exports.newContent = async (req, res) => {
     contentRecord.name = name;
 
     await contentRecord.save();
-    res.json({ contentId, address, r, s, v });
+    res.json({ contentId, address, signature });
   } catch (err) {
     res.status(500).json(err);
   }
@@ -128,6 +128,24 @@ exports.newContent = async (req, res) => {
 exports.index = async (req, res) => {
   try {
     const contents = await Content.find();
+    res.json(
+      contents.map((item) => {
+        return {
+          name: item.name,
+          content: item.content.filter((contentItem) => !contentItem.protected),
+        };
+      })
+    );
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
+exports.getContents = async (req, res) => {
+  const { address } = req.params;
+
+  try {
+    const contents = await Content.find({ address: address });
     res.json(contents);
   } catch (err) {
     res.status(500).json(err);

@@ -64,11 +64,5 @@ exports.getNewContractSinature = async (address, contentId) => {
 
   const signature = await wallet.signMessage(messageHashBinary);
 
-  const { r, s, v } = ethers.utils.splitSignature(signature);
-
-  return {
-    r,
-    s,
-    v,
-  };
+  return signature;
 };
