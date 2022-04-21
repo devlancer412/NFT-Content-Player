@@ -34,8 +34,8 @@ describe("NCP", function () {
   it("Set addr1 to distributor server", async function () {
     await proof.setContentServer(owner.address, true);
 
-    const contentId = (await proof.newContentId()).value.toNumber();
-    expect(contentId).to.equal(0);
+    const contentId = 0;
+    expect(await proof.isSetted(contentId)).to.equal(false);
 
     let messageHash = ethers.utils.solidityKeccak256(
       ["address", "uint"],
@@ -49,12 +49,13 @@ describe("NCP", function () {
     await proof.newContent(contentId, addr1.address, signature);
 
     expect(await proof.contentDistributorOf(contentId)).to.equal(addr1.address);
+    expect(await proof.isSetted(contentId)).to.equal(true);
   });
 
   it("Set addr2 to consumer and mint NFT to addr1, and then transfer to addr2", async function () {
     await proof.setContentServer(owner.address, true);
 
-    const contentId = (await proof.newContentId()).value.toNumber();
+    const contentId = 0;
 
     let messageHash = ethers.utils.solidityKeccak256(
       ["address", "uint"],

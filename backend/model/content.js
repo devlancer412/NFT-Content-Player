@@ -3,10 +3,16 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const ContentSchema = new Schema({
-  contentId: { type: Number, unique: true, required: true },
+  contentId: { type: String, required: true },
   name: { type: String },
-  owner: { type: String },
-  type: { type: Number },
+  address: { type: String },
+  content: [
+    {
+      name: { type: String, required: true, unique: true },
+      link: { type: String },
+      protected: { type: Boolean },
+    },
+  ],
 });
 
 module.exports = Content = mongoose.model("Content", ContentSchema);
