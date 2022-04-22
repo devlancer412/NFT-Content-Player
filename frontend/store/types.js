@@ -1,11 +1,11 @@
 // State Action
 export const SET_LOADING = "SET_LOADING";
 export const SET_ADDRESS = "SET_ADDRESS";
+export const SET_ERROR = "SET_ERROR";
 
 // Content Action
 export const SET_CONTENTS = "SET_CONTENTS";
 export const ADD_CONTENTS = "ADD_CONTENT";
-export const REMOVE_CONTENTS = "REMOVE_CONTENT";
 export const UPDATE_CONTENTS = "UPDATE_CONTENT";
 
 // Blob Action

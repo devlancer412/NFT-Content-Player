@@ -4,9 +4,9 @@ import { Provider } from "react-redux";
 
 function MyApp({ Component, pageProps }) {
   return (
-    <Privider store={store}>
+    <Provider store={store}>
       <Component {...pageProps} />
-    </Privider>
+    </Provider>
   );
 }
 

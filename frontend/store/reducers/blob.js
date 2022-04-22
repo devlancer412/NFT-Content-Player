@@ -1,6 +1,6 @@
 import { SET_BLOBS, ADD_BLOB, REMOVE_BLOB, UPDATE_BLOB } from "../types";
 
-export default blobReducer = (state = [], { type, payload }) => {
+const blobReducer = (state = [], { type, payload }) => {
   switch (type) {
     case SET_BLOBS:
       return payload;
@@ -14,3 +14,5 @@ export default blobReducer = (state = [], { type, payload }) => {
       return state;
   }
 };
+
+export default blobReducer;
