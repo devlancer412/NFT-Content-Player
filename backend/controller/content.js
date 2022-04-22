@@ -115,7 +115,7 @@ exports.newContent = async (req, res) => {
       contentId
     );
 
-    contentRecord.address = address;
+    contentRecord.address = address.toLowerCase();
     contentRecord.name = name;
 
     await contentRecord.save();
@@ -145,7 +145,7 @@ exports.getContents = async (req, res) => {
   const { address } = req.params;
 
   try {
-    const contents = await Content.find({ address: address });
+    const contents = await Content.find({ address: address.toLowerCase() });
     res.json(contents);
   } catch (err) {
     res.status(500).json(err);

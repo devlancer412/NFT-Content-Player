@@ -2,8 +2,8 @@ import { SET_LOADING, SET_ADDRESS, SET_ERROR } from "../types";
 
 const initialState = {
   isLoading: false,
-  address: "",
-  error: "",
+  address: null,
+  error: null,
 };
 
 const stateReducer = (state = initialState, { type, payload }) => {
