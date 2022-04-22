@@ -6,6 +6,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "axios": "^0.26.1",
+    "dotenv": "^16.0.0",
     "next": "latest",
     "next-redux-wrapper": "^7.0.5",
     "react": "17.0.2",
