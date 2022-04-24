@@ -9,7 +9,6 @@ const WalletConnectBtn = () => {
   const dispatch = useDispatch();
 
   const connectHandle = () => {
-    console.log(address);
     if (address) {
       return dispatch(setAddress(null));
     }

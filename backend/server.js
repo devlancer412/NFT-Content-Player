@@ -6,6 +6,8 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const routes = require("./routes");
 
+global.__basedir = __dirname;
+
 // Database connection
 require("./config/database");
 

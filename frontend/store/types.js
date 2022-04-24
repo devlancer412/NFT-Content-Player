@@ -5,11 +5,11 @@ export const SET_ERROR = "SET_ERROR";
 
 // Content Action
 export const SET_CONTENTS = "SET_CONTENTS";
-export const ADD_CONTENTS = "ADD_CONTENT";
-export const UPDATE_CONTENTS = "UPDATE_CONTENT";
+export const ADD_CONTENT = "ADD_CONTENT";
+export const UPDATE_CONTENT = "UPDATE_CONTENT";
 
 // Blob Action
-export const SET_BLOBS = "SET_BLOBS";
-export const ADD_BLOBS = "ADD_BLOB";
-export const REMOVE_BLOBS = "REMOVE_BLOB";
-export const UPDATE_BLOBS = "UPDATE_BLOB";
+export const SET_BLOBS = "GET_BLOB";
+export const ADD_BLOB = "ADD_BLOB";
+export const REMOVE_BLOB = "REMOVE_BLOB";
+export const UPDATE_BLOB = "UPDATE_BLOB";

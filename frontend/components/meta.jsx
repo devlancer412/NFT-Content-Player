@@ -1,4 +1,6 @@
 import Head from "next/head";
+import { config, dom } from "@fortawesome/fontawesome-svg-core";
+config.autoAddCss = false;
 
 export const Meta = ({ title, keywords, description }) => {
   return (
@@ -9,6 +11,7 @@ export const Meta = ({ title, keywords, description }) => {
       <meta charSet="utf-8" />
       <link rel="icon" href="/favicon.ico" />
       <title>{title}</title>
+      <style>{dom.css()}</style>
     </Head>
   );
 };

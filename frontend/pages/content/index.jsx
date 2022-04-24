@@ -2,23 +2,29 @@ import Router from "next/router";
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPlus,
+  faList,
+  faExternalLinkAlt,
+  faHammer,
+} from "@fortawesome/free-solid-svg-icons";
 
-import BlueBtn from "../../components/button/blue";
-import LargeBtn from "../../components/button/large";
-import NormalBtn from "../../components/button/normal";
+import Button from "../../components/button/Button";
 
 import { getPersonalContentList } from "../../store/actions/content";
 import { setError } from "../../store/actions/state";
 
 const ContentManager = (props) => {
   const contents = useSelector((store) => store.content);
-  const address = useSelector((store) => store.state.address);
+  // const address = useSelector((store) => store.state.address);
+  const address = "0xa2E6F8392CF06f611C10764aA50F20E41aD30d23";
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (!address) {
       dispatch(setError("Wallet don't connected, please to connect wallet"));
-      Router.push("/");
+      // Router.push("/");
     }
   });
 
@@ -41,7 +47,7 @@ const ContentManager = (props) => {
               <div className="content-detail w-3/4 flex flex-col justify-between pr-5">
                 <div className="content-header flex flex-col w-full">
                   <div className="content-name w-full text-xl">
-                    {element.name} - Season {index + 1}
+                    {element.name}
                   </div>
                   <div className="content-id w-full text-base">
                     Content Id: {element.contentId}
@@ -49,11 +55,27 @@ const ContentManager = (props) => {
                 </div>
                 <div className="content-edit flex flex-row justify-between font-semibold">
                   <div className="content-ct flex flex-row justify-start">
-                    <NormalBtn>Contents</NormalBtn>
-                    <NormalBtn>Transfer</NormalBtn>
+                    <Button
+                      size="base"
+                      icon={<FontAwesomeIcon icon={faList} />}
+                      text="Contents"
+                      className="border border-2 border-indigo-200 text-indigo-600 py-1 w-40 mr-3"
+                    />
+
+                    <Button
+                      size="base"
+                      icon={<FontAwesomeIcon icon={faExternalLinkAlt} />}
+                      text="Transfer"
+                      className="border border-2 border-indigo-200 text-indigo-600 py-1 w-40"
+                    />
                   </div>
                   <div className="content-ct flex flex-row justify-end">
-                    <BlueBtn>Mint</BlueBtn>
+                    <Button
+                      size="base"
+                      icon={<FontAwesomeIcon icon={faHammer} />}
+                      text="Mint"
+                      className="bg-indigo-600 text-white py-1 w-40"
+                    />
                   </div>
                 </div>
               </div>
@@ -66,7 +88,12 @@ const ContentManager = (props) => {
       </div>
       <div className="footer p-5 w-full">
         <div className="float-left">
-          <LargeBtn>Add Content</LargeBtn>
+          <Button
+            size="base"
+            icon={<FontAwesomeIcon icon={faPlus} />}
+            text="Add Content"
+            className="border border-2 border-indigo-200 text-indigo-600 py-1 w-52"
+          />
         </div>
       </div>
     </main>

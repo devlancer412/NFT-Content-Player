@@ -6,7 +6,7 @@ import blobReducer from "./blob";
 const rootReducer = combineReducers({
   state: stateReducer,
   content: contentReducer,
-  blob: blobReducer,
+  blobs: blobReducer,
 });
 
 export default rootReducer;

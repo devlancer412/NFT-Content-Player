@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../services/upload-file";
 import { SET_CONTENTS, ADD_CONTENT, UPDATE_CONTENT, SET_ERROR } from "../types";
 import { setError, setLoading } from "./state";
 

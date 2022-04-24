@@ -2,7 +2,6 @@ const { isContentServer } = require("../utils/api.contract");
 
 const contentServerMiddleware = async (req, res, next) => {
   const { address } = req.body;
-  console.log("Passed content middleware");
 
   if (!address || !contentId) {
     res.status(301).json("Authentication parameters missed");

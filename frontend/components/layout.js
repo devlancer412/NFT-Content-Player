@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import WalletConnectBtn from "./button/connect";
-import { Loading } from "./Loading";
+import { Loading } from "./loading";
 import { Meta } from "./meta";
 
 const Layout = ({ children }) => {
