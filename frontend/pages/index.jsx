@@ -1,5 +1,4 @@
-import Head from "next/head";
-import Layout from "../components/layout";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -9,6 +8,7 @@ export default function Home() {
           This is Dashboard
         </h1>
       </div>
+      <Link href="/content">Content Manage</Link>
     </main>
   );
 }

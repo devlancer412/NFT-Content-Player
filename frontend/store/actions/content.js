@@ -1,50 +1,138 @@
-import axios from "../../services/upload-file";
-import { SET_CONTENTS, ADD_CONTENT, UPDATE_CONTENT, SET_ERROR } from "../types";
+import Router from "next/router";
+import axios from "../../utils/http-comon";
+import stringify from "qs-stringify";
+
+import {
+  SET_CONTENT_NAME,
+  SET_CONTENT_ID,
+  SET_BLOBS,
+  ADD_BLOB,
+  REMOVE_BLOB,
+  UPDATE_BLOB,
+  UPDATE_BLOB_LINK,
+  CLEAR_CONTENT,
+  SET_CONTENT_TYPE,
+} from "../types";
+
 import { setError, setLoading } from "./state";
+import { newContentCreate } from "./web3-api";
 
-export const getContentList = () => async (dispatch) => {
-  try {
-    setLoading(true);
-    const contents = await axios.get("/api/content");
-
-    dispatch({
-      type: SET_CONTENTS,
-      payload: contents.data,
-    });
-
-    setLoading(false);
-  } catch (err) {
-    setLoading(false);
-    if (!err.response) {
-      return dispatch(setError("Can't reache to server"));
-    }
-
-    return dispatch(setError(err.response.data));
-  }
+export const setContentName = (name) => (dispatch) => {
+  console.log("set content name:", name);
+  return dispatch({
+    type: SET_CONTENT_NAME,
+    payload: name,
+  });
 };
 
-export const getPersonalContentList = (address) => async (dispatch) => {
-  if (typeof address != "string") {
-    return;
-  }
-  if (address.length != 42) {
-    return;
-  }
-  try {
-    setLoading(true);
-    const contents = await axios.get(`/api/content/${address}`);
+export const setContentId = (contentId) => (dispatch) => {
+  return dispatch({
+    type: SET_CONTENT_ID,
+    payload: contentId,
+  });
+};
 
-    dispatch({
-      type: SET_CONTENTS,
-      payload: contents.data,
-    });
-    setLoading(false);
+export const setContentType = (contentId) => (dispatch) => {
+  return dispatch({
+    type: SET_CONTENT_TYPE,
+    payload: contentId,
+  });
+};
+
+export const addBlob = (item) => (dispatch) => {
+  return dispatch({
+    type: ADD_BLOB,
+    payload: item,
+  });
+};
+
+export const updateBlob = (index, item) => (dispatch) => {
+  return dispatch({
+    type: UPDATE_BLOB,
+    payload: {
+      index,
+      item,
+    },
+  });
+};
+
+export const updateBlobLink = (index, link) => (dispatch) => {
+  return dispatch({
+    type: UPDATE_BLOB_LINK,
+    payload: {
+      index,
+      link,
+    },
+  });
+};
+
+export const removeBlob = (index) => (dispatch) => {
+  return dispatch({
+    type: REMOVE_BLOB,
+    payload: index,
+  });
+};
+
+export const getNewContentId = () => async (dispatch) => {
+  dispatch(setLoading(true));
+  try {
+    const result = await axios.get("/api/content/upload/new");
+
+    dispatch(setContentId(result.data));
   } catch (err) {
-    setLoading(false);
     if (!err.response) {
-      return dispatch(setError("Can't reache to server"));
+      dispatch(setError("Can't reache to server"));
+    } else {
+      dispatch(setError(stringify(err.response.data)));
+    }
+  }
+
+  dispatch(setLoading(false));
+};
+
+export const uploadContentBlob =
+  (name, address, contentId, blobs) => async (dispatch) => {
+    dispatch(setLoading(true));
+
+    try {
+      for (let blob of blobs) {
+        await axios.post(
+          `/api/content/upload/${contentId}/blob`,
+          stringify(blob)
+        );
+      }
+
+      const result = await axios.post(
+        `/api/content/upload/${contentId}/finish`,
+        stringify({ name, address })
+      );
+
+      await dispatch(
+        newContentCreate(contentId, address, result.data.signature)
+      );
+
+      Router.push("/content/new");
+    } catch (err) {
+      await axios.delete(
+        `/api/content/upload/${contentId}`,
+        stringify(address)
+      );
+
+      if (err && !err.response) {
+        dispatch(setError("Can't reache to server"));
+      } else if (err && err.response) {
+        dispatch(setError(stringify(err.response.data)));
+      } else {
+        dispatch(setError("Unknown error"));
+      }
     }
 
-    return dispatch(setError(err.response.data));
-  }
+    dispatch(setLoading(false));
+  };
+
+export const clearContent = () => (dispatch) => {
+  dispatch({
+    type: CLEAR_CONTENT,
+    payload: null,
+  });
 };

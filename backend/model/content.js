@@ -8,8 +8,9 @@ const ContentSchema = new Schema({
   address: { type: String },
   content: [
     {
-      name: { type: String, required: true, unique: true },
+      name: { type: String, required: true },
       link: { type: String },
+      type: { type: String },
       protected: { type: Boolean },
     },
   ],

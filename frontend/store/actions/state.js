@@ -1,4 +1,4 @@
-import { SET_LOADING, SET_ADDRESS, SET_ERROR } from "../types";
+import { SET_LOADING, SET_ADDRESS, SET_ERROR, SET_SIGNATURE } from "../types";
 
 export const setLoading = (flag) => (dispatch) => {
   return dispatch({

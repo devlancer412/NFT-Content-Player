@@ -14,9 +14,14 @@ exports.newContentId = async (req, res) => {
 
 exports.newBlobUpload = async (req, res) => {
   const contentId = req.params.contentId;
-  const { name, link, protected } = req.body;
+  const { name, link, protected, type } = req.body;
 
-  if (!name || !link || !protected) {
+  if (
+    !name ||
+    !link ||
+    (protected != "true" && protected != "false") ||
+    !type
+  ) {
     return res.status(400).json("Invalid argumets");
   }
 
@@ -42,13 +47,14 @@ exports.newBlobUpload = async (req, res) => {
       name,
       link,
       protected,
+      type,
     });
 
     await contentRecord.save();
 
     res.json({ success: true });
   } catch (err) {
-    res.status(500).json(JSON.err);
+    res.status(500).json(err);
   }
 };
 
@@ -77,7 +83,7 @@ exports.newBlobDelete = async (req, res) => {
 
 exports.newBlobUpdate = async (req, res) => {
   const { contentId, name } = req.params;
-  const { link, protected } = req.body;
+  const { link, protected, type } = req.body;
 
   try {
     let contentRecord = await Content.findOne({ contentId: contentId });
@@ -87,7 +93,7 @@ exports.newBlobUpdate = async (req, res) => {
     }
 
     const newContent = contentRecord.content.map((item) => {
-      return item.name === name ? { name, link, protected } : item;
+      return item.name === name ? { name, link, protected, type } : item;
     });
 
     contentRecord.content = newContent;
@@ -102,6 +108,11 @@ exports.newBlobUpdate = async (req, res) => {
 exports.newContent = async (req, res) => {
   const { contentId } = req.params;
   const { name, address } = req.body;
+
+  if (!name || !address) {
+    await Content.findOneAndDelete({ contentId: contentId });
+    return res.status(400).json("Params aren't set");
+  }
 
   try {
     let contentRecord = await Content.findOne({ contentId: contentId });
@@ -147,6 +158,22 @@ exports.getContents = async (req, res) => {
   try {
     const contents = await Content.find({ address: address.toLowerCase() });
     res.json(contents);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
+exports.deleteContent = async (req, res) => {
+  const { contentId } = req.params;
+  const { address } = req.body;
+
+  try {
+    if (!contractApi.isContentDistributor(address, contentId)) {
+      return res.status(401).json("You can't delete Contract");
+    }
+
+    await Content.findOneAndDelete({ contentId: contentId });
+    res.json({ success: true });
   } catch (err) {
     res.status(500).json(err);
   }

@@ -10,5 +10,6 @@ Router.post("/upload/:contentId/blob", contentController.newBlobUpload);
 Router.delete("/upload/:contentId/blob/:name", contentController.newBlobDelete);
 Router.patch("/upload/:contentId/blob/:name", contentController.newBlobUpdate);
 Router.post("/upload/:contentId/finish", contentController.newContent);
+Router.delete("/upload/:contentId", contentController.deleteContent);
 
 module.exports = Router;

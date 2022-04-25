@@ -6,8 +6,6 @@ import uploadFile from "../../services/upload-file";
 const VideoDropZone = ({ fileHandle }) => {
   const [src, setSrc] = useState({ preview: null, type: null });
 
-  console.log(src);
-
   const onDrop = useCallback(async (acceptedFile) => {
     const file = acceptedFile[0];
     const filePath = await uploadFile(file);

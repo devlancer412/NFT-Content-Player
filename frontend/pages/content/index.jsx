@@ -1,7 +1,9 @@
 import Router from "next/router";
+import Link from "next/link";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
@@ -12,24 +14,33 @@ import {
 
 import Button from "../../components/button/Button";
 
-import { getPersonalContentList } from "../../store/actions/content";
-import { setError } from "../../store/actions/state";
+import { getPersonalContentList } from "../../services/content-api";
+import { setError, setLoading } from "../../store/actions/state";
 
-const ContentManager = (props) => {
-  const contents = useSelector((store) => store.content);
-  // const address = useSelector((store) => store.state.address);
-  const address = "0xa2E6F8392CF06f611C10764aA50F20E41aD30d23";
+const ContentManager = () => {
+  const [contents, setContents] = useState([]);
+
+  const address = useSelector((store) => store.state.address);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (!address) {
-      dispatch(setError("Wallet don't connected, please to connect wallet"));
-      // Router.push("/");
+      dispatch(setError("Please connect to wallet"));
+      Router.push("/");
     }
   });
 
-  useEffect(() => {
-    dispatch(getPersonalContentList(address));
+  useEffect(async () => {
+    dispatch(setLoading(true));
+    const result = await getPersonalContentList(address);
+
+    if (result.success) {
+      setContents(result.data);
+    } else {
+      dispatch(setError(result.data));
+    }
+
+    dispatch(setLoading(false));
   }, [address]);
 
   return (
@@ -42,7 +53,7 @@ const ContentManager = (props) => {
           return (
             <div
               className="content-view flex flex-row w-full mb-10"
-              key={element.contentId}
+              key={index}
             >
               <div className="content-detail w-3/4 flex flex-col justify-between pr-5">
                 <div className="content-header flex flex-col w-full">
@@ -88,12 +99,14 @@ const ContentManager = (props) => {
       </div>
       <div className="footer p-5 w-full">
         <div className="float-left">
-          <Button
-            size="base"
-            icon={<FontAwesomeIcon icon={faPlus} />}
-            text="Add Content"
-            className="border border-2 border-indigo-200 text-indigo-600 py-1 w-52"
-          />
+          <Link href="/content/new/uploadblob">
+            <Button
+              size="base"
+              icon={<FontAwesomeIcon icon={faPlus} />}
+              text="Add Content"
+              className="border border-2 border-indigo-200 text-indigo-600 py-1 w-52"
+            />
+          </Link>
         </div>
       </div>
     </main>

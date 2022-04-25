@@ -1,7 +1,6 @@
 import Router from "next/router";
-import Link from "next/link";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faUpload, faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -11,30 +10,50 @@ import Input from "../../../components/Form/input";
 import Select from "../../../components/Form/select";
 
 import { setError } from "../../../store/actions/state";
-import { addBlob, removeBlob, updateBlob } from "../../../store/actions/blob";
+
+import {
+  addBlob,
+  removeBlob,
+  setContentName,
+  setContentType,
+  updateBlob,
+  updateBlobLink,
+} from "../../../store/actions/content";
+
 import ImageDropZone from "../../../components/dropzone/image";
 import VideoDropZone from "../../../components/dropzone/video";
+import {
+  getNewContentId,
+  uploadContentBlob,
+} from "../../../store/actions/content";
 
 const BlobTypes = ["Video", "Image"];
+const ContentTypes = ["Type-1", "Type-2"];
 
-const NewContent = (props) => {
-  const [name, setName] = useState("");
-  const [type, setType] = useState(0);
-
-  const blobs = useSelector((store) => store.blobs);
+const BlobUploadManager = () => {
+  const name = useSelector((store) => store.content.name);
+  const contentId = useSelector((store) => store.content.contentId);
   const address = useSelector((store) => store.state.address);
+  const blobs = useSelector((store) => store.content.blobs);
+  const type = useSelector((store) => store.content.type);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (!address) {
-      // dispatch(setError("Wallet don't connected, please to connect wallet"));
-      // Router.push("/");
+      dispatch(setError("Please connect wallet"));
+      Router.push("/");
     }
   });
 
   useEffect(() => {
-    // dispatch(getPersonalContentList(address));
+    dispatch(getNewContentId());
   }, [address]);
+
+  useEffect(() => {
+    if (!contentId) {
+      Router.push("/");
+    }
+  }, [contentId]);
 
   const addBlobHandle = () => {
     if (blobs.filter((item) => item.name === "").length) {
@@ -64,11 +83,25 @@ const NewContent = (props) => {
   };
 
   const updateProtectedHandle = (index, flag) => {
-    dispatch(updateBlob(index, { ...blobs[index], protected: flag }));
+    updateBlobHandle(index, { ...blobs[index], protected: flag });
   };
 
   const updateBlobType = (index, value) => {
-    dispatch(updateBlob(index, { ...blobs[index], type: BlobTypes[value] }));
+    dispatch(updateBlob(index, { ...blobs[index], type: value }));
+  };
+
+  const uploadContentBlobHandle = async () => {
+    if (!address) {
+      return dispatch(
+        setError("You can't upload. Please connect to your wallet.")
+      );
+    }
+
+    if (!name) {
+      return dispatch(setError("Please insert Content name"));
+    }
+
+    dispatch(uploadContentBlob(name, address, contentId, blobs));
   };
 
   return (
@@ -80,15 +113,18 @@ const NewContent = (props) => {
         <Input
           name="Title"
           value={name}
-          handleChange={setName}
+          handleChange={(value) => dispatch(setContentName(value))}
           placeholder="Rick and Morty Season 1"
           className="w-2/3"
         />
+        <div className="w-full">{contentId}</div>
         <Select
           name="Type"
-          value={type}
-          items={["Video", "Image"]}
-          handleChange={setType}
+          value={ContentTypes.indexOf(type)}
+          items={ContentTypes}
+          handleChange={(value) =>
+            dispatch(setContentType(ContentTypes[value]))
+          }
         />
       </div>
       <div className="main flex flex-col w-full p-5 border-y-2 border-gray-700 h-full flex-1">
@@ -117,25 +153,23 @@ const NewContent = (props) => {
                       name="Type"
                       value={BlobTypes.indexOf(element.type)}
                       items={BlobTypes}
-                      handleChange={(value) => updateBlobType(index, value)}
+                      handleChange={(value) =>
+                        updateBlobType(index, BlobTypes[value])
+                      }
                     />
                   </div>
                 </div>
                 <div className="content-edit flex flex-row justify-between font-semibold">
                   <div className="content-ct flex flex-row justify-start">
                     <label className="inline-flex justify-between items-center">
-                      {element.protected ? (
-                        <input
-                          type="checkbox"
-                          checked
-                          onChange={() => updateProtectedHandle(index, false)}
-                        />
-                      ) : (
-                        <input
-                          type="checkbox"
-                          onChange={() => updateProtectedHandle(index, true)}
-                        />
-                      )}
+                      <input
+                        type="checkbox"
+                        name="type"
+                        value={element.protected}
+                        onChange={() =>
+                          updateProtectedHandle(index, !element.protected)
+                        }
+                      />
                       <span className="ml-2">Protected</span>
                     </label>
                   </div>
@@ -153,22 +187,12 @@ const NewContent = (props) => {
               <div className="content-preview w-1/3">
                 {element.type === "Image" ? (
                   <ImageDropZone
-                    fileHandle={(link) => {
-                      updateBlobHandle(index, {
-                        ...element,
-                        link: link,
-                      });
-                    }}
+                    fileHandle={(link) => dispatch(updateBlobLink(index, link))}
                   />
                 ) : null}
                 {element.type === "Video" ? (
                   <VideoDropZone
-                    fileHandle={(link) => {
-                      updateBlobHandle(index, {
-                        ...element,
-                        link: link,
-                      });
-                    }}
+                    fileHandle={(link) => dispatch(updateBlobLink(index, link))}
                   />
                 ) : null}
               </div>
@@ -187,18 +211,17 @@ const NewContent = (props) => {
           />
         </div>
         <div className="float-right">
-          <Link href="/content/new">
-            <Button
-              size="base"
-              icon={<FontAwesomeIcon icon={faUpload} />}
-              text="Upload Content"
-              className="border border-2 border-green-200 text-green-600 py-1 w-52"
-            />
-          </Link>
+          <Button
+            size="base"
+            icon={<FontAwesomeIcon icon={faUpload} />}
+            text="Upload Content"
+            onClick={uploadContentBlobHandle}
+            className="border border-2 border-green-200 text-green-600 py-1 w-52"
+          />
         </div>
       </div>
     </main>
   );
 };
 
-export default NewContent;
+export default BlobUploadManager;

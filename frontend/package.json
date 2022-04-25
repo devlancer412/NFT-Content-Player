@@ -19,6 +19,7 @@
     "next": "latest",
     "next-redux-wrapper": "^7.0.5",
     "nextjs-progressbar": "0.0.14",
+    "qs-stringify": "^1.2.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-dropzone": "^12.0.5",

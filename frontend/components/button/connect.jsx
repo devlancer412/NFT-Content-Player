@@ -1,4 +1,3 @@
-import Router from "next/router";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setAddress } from "../../store/actions/state";
@@ -14,8 +13,6 @@ const WalletConnectBtn = () => {
     }
 
     dispatch(connectWallet());
-
-    Router.push("/content");
   };
 
   const str = address

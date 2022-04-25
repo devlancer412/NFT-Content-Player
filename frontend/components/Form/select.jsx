@@ -41,10 +41,10 @@ const Select = ({ name, value, items, handleChange }) => {
             {expanded ? (
               <div className="absolute mt-1 w-full z-10 rounded-md bg-white shadow-lg">
                 <ul
-                  tabindex="-1"
+                  tabIndex="-1"
                   role="listbox"
-                  ariaLabelledby="listbox-label"
-                  ariaActivedescendant="listbox-item-3"
+                  aria-labelledby="listbox-label"
+                  aria-activedescendant="listbox-item-3"
                   className="max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
                 >
                   {items.map((item, index) => {
