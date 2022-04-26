@@ -44,7 +44,7 @@ exports.isContentServer = async (address) => {
 };
 
 exports.isContentDistributor = async (address, contentId) => {
-  return address == (await proofContract.contentDistributorOf(contentId));
+  return await proofContract.isDistributorOf(address, contentId);
 };
 
 exports.setContentServer = async (address, setVale) => {

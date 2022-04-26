@@ -49,12 +49,6 @@ const BlobUploadManager = () => {
     dispatch(getNewContentId());
   }, [address]);
 
-  useEffect(() => {
-    if (!contentId) {
-      Router.push("/");
-    }
-  }, [contentId]);
-
   const addBlobHandle = () => {
     if (blobs.filter((item) => item.name === "").length) {
       return dispatch(setError("There is an item is empty"));

@@ -18,7 +18,6 @@ import { setError, setLoading } from "./state";
 import { newContentCreate } from "./web3-api";
 
 export const setContentName = (name) => (dispatch) => {
-  console.log("set content name:", name);
   return dispatch({
     type: SET_CONTENT_NAME,
     payload: name,
@@ -85,6 +84,7 @@ export const getNewContentId = () => async (dispatch) => {
     } else {
       dispatch(setError(stringify(err.response.data)));
     }
+    Router.push("/content");
   }
 
   dispatch(setLoading(false));
@@ -107,12 +107,15 @@ export const uploadContentBlob =
         stringify({ name, address })
       );
 
+      console.log("Signature was got:", result.data.contentId);
+
       await dispatch(
         newContentCreate(contentId, address, result.data.signature)
       );
 
       Router.push("/content/new");
     } catch (err) {
+      console.log(err);
       await axios.delete(
         `/api/content/upload/${contentId}`,
         stringify(address)

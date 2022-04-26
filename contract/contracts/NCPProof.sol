@@ -42,17 +42,16 @@ contract NCPProof is ERC721, Ownable {
         _contentServers[contentServer] = set;
     }
 
-    function isContentServer(address addr)
-        public
-        view
-        onlyOwner
-        returns (bool)
-    {
+    function isContentServer(address addr) public view returns (bool) {
         if (addr == owner()) {
             return true;
         }
 
         return _contentServers[addr];
+    }
+
+    function isSetted(uint256 contentId) public view returns (bool) {
+        return _distributionOwner[contentId] != address(0);
     }
 
     function getSigner(bytes32 hash, bytes memory signature)
@@ -64,10 +63,6 @@ contract NCPProof is ERC721, Ownable {
             abi.encodePacked("\x19Ethereum Signed Message:\n32", hash)
         );
         return signedHash.recover(signature);
-    }
-
-    function isSetted(uint256 contentId) public view returns (bool) {
-        return _distributionOwner[contentId] != address(0);
     }
 
     // Add content to owner
@@ -152,6 +147,17 @@ contract NCPProof is ERC721, Ownable {
         returns (address)
     {
         return _distributionOwner[contentId];
+    }
+
+    function isDistributorOf(address owner, uint256 contentId)
+        public
+        view
+        returns (bool)
+    {
+        return
+            contentDistributorOf(contentId) == address(0)
+                ? true
+                : contentDistributorOf(contentId) == owner;
     }
 
     function _burn(uint256 tokenId) internal override {
