@@ -70,7 +70,7 @@ contract NCPProof is ERC721, Ownable {
         uint256 contentId,
         address contentOwner,
         bytes memory signature
-    ) public {
+    ) public returns (bool) {
         // signature verify keccak256(abi.encodePacked(contentId, owner))
         require(
             _distributionOwner[contentId] == address(0),
@@ -86,6 +86,8 @@ contract NCPProof is ERC721, Ownable {
         );
 
         _distributionOwner[contentId] = contentOwner;
+
+        return true;
     }
 
     function transferContentRights(uint256 contentId, address newOwner)

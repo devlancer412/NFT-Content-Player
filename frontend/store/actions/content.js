@@ -82,7 +82,7 @@ export const getNewContentId = () => async (dispatch) => {
     if (!err.response) {
       dispatch(setError("Can't reache to server"));
     } else {
-      dispatch(setError(stringify(err.response.data)));
+      dispatch(setError(err.response.data));
     }
     Router.push("/content");
   }
@@ -93,6 +93,8 @@ export const getNewContentId = () => async (dispatch) => {
 export const uploadContentBlob =
   (name, address, contentId, blobs) => async (dispatch) => {
     dispatch(setLoading(true));
+
+    console.log(typeof contentId, contentId);
 
     try {
       for (let blob of blobs) {
@@ -109,13 +111,26 @@ export const uploadContentBlob =
 
       console.log("Signature was got:", result.data.contentId);
 
-      await dispatch(
+      const newContentResult = await dispatch(
         newContentCreate(contentId, address, result.data.signature)
       );
+
+      if (!newContentResult) {
+        dispatch(setError("Failed content creation"));
+
+        await axios.delete(
+          `/api/content/upload/${contentId}`,
+          stringify(address)
+        );
+
+        dispatch(setLoading(false));
+        return;
+      }
 
       Router.push("/content/new");
     } catch (err) {
       console.log(err);
+
       await axios.delete(
         `/api/content/upload/${contentId}`,
         stringify(address)
@@ -124,7 +139,7 @@ export const uploadContentBlob =
       if (err && !err.response) {
         dispatch(setError("Can't reache to server"));
       } else if (err && err.response) {
-        dispatch(setError(stringify(err.response.data)));
+        dispatch(setError(err.response.data));
       } else {
         dispatch(setError("Unknown error"));
       }

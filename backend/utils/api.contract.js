@@ -34,7 +34,7 @@ exports.getNewContentId = async () => {
   } catch (err) {
     return {
       success: false,
-      data: err,
+      data: err.reason,
     };
   }
 };

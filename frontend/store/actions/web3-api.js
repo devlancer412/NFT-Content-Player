@@ -4,12 +4,14 @@ import WalletConnectProvider from "../../utils/wallet-connection-provider-option
 
 import axios from "../../utils/http-comon";
 import stringify from "qs-stringify";
-import { toast } from "react-toastify";
+import { toastr } from "react-toastify";
 import { setAddress, setError, setLoading } from "./state";
 
 import CONTRACTDATA from "../../abi/NCPProof.json";
 
 const abi = CONTRACTDATA.abi;
+
+const expectedBlockTime = 1000;
 
 export const connectWallet = () => async (dispatch) => {
   dispatch(setLoading(true));
@@ -39,11 +41,13 @@ export const connectWallet = () => async (dispatch) => {
 
     window.provider.on("error", (e) => dispatch(setError("WS Error : " + e)));
     window.provider.on("end", (e) => dispatch(setError("WS End : " + e)));
+
     window.provider.on("disconnect", (error) => {
       dispatch(setError(error));
     });
+
     window.provider.on("connect", (info) => {
-      toast.info(info);
+      toastr.info(info);
     });
 
     window.web3 = new Web3(provider);
@@ -63,14 +67,33 @@ export const newContentCreate =
   (contentId, address, signature) => async (dispatch) => {
     dispatch(setLoading(true));
 
-    console.log(address);
+    console.log({ contentId, address, signature });
 
     try {
-      const tx = await window.proofContract.methods
+      const txHash = await window.proofContract.methods
         .newContent(contentId, address, signature)
+        .send({ from: address });
+
+      let transactionReceipt = null;
+      while (transactionReceipt == null) {
+        // Waiting expectedBlockTime until the transaction is mined
+        transactionReceipt = await window.web3.eth.getTransactionReceipt(
+          txHash
+        );
+        console.log("waiting");
+        await sleep(expectedBlockTime);
+      }
+
+      console.log(transactionReceipt);
+
+      const result = await window.proofContract.methods
+        .contentDistributorOf(contentId)
         .call();
 
-      console.log(tx.wait);
+      console.log(result);
+
+      dispatch(setLoading(false));
+      return true;
     } catch (err) {
       console.log(err);
       await axios.delete(
@@ -79,7 +102,8 @@ export const newContentCreate =
       );
 
       dispatch(setError(err.message));
-    }
 
-    dispatch(setLoading(false));
+      dispatch(setLoading(false));
+      return false;
+    }
   };
