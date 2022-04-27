@@ -7,7 +7,7 @@ const uploadFiles = async (req, res) => {
 
     res.json("/resource/tmp/" + file.filename);
   } catch (error) {
-    console.log(error);
+    console.log("upload file error");
     return res.json(500).json(`Error when trying upload images: ${error}`);
   }
 };

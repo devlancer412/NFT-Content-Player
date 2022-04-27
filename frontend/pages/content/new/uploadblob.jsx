@@ -13,6 +13,7 @@ import { setError } from "../../../store/actions/state";
 
 import {
   addBlob,
+  clearContent,
   removeBlob,
   setContentName,
   setContentType,
@@ -36,6 +37,7 @@ const BlobUploadManager = () => {
   const address = useSelector((store) => store.state.address);
   const blobs = useSelector((store) => store.content.blobs);
   const type = useSelector((store) => store.content.type);
+  const finished = useSelector((store) => store.content.finished);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -48,6 +50,12 @@ const BlobUploadManager = () => {
   useEffect(() => {
     dispatch(getNewContentId());
   }, [address]);
+
+  useEffect(() => {
+    if (finished) {
+      dispatch(clearContent());
+    }
+  }, [finished]);
 
   const addBlobHandle = () => {
     if (blobs.filter((item) => item.name === "").length) {

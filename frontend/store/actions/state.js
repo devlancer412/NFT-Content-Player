@@ -8,6 +8,11 @@ export const setLoading = (flag) => (dispatch) => {
 };
 
 export const setError = (err) => (dispatch) => {
+  dispatch({
+    type: SET_ERROR,
+    payload: "",
+  });
+
   return dispatch({
     type: SET_ERROR,
     payload: err,

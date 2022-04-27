@@ -130,7 +130,11 @@ exports.newContent = async (req, res) => {
     contentRecord.name = name;
 
     await contentRecord.save();
-    res.json({ contentId, address, signature });
+    res.json({
+      contentId,
+      address,
+      signature,
+    });
   } catch (err) {
     res.status(500).json(err);
   }

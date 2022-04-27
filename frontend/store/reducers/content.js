@@ -8,6 +8,7 @@ import {
   UPDATE_BLOB_LINK,
   CLEAR_CONTENT,
   SET_CONTENT_TYPE,
+  SET_FINISHED,
 } from "../types";
 
 const initialState = {
@@ -15,6 +16,7 @@ const initialState = {
   contentId: "",
   type: "Type-1",
   blobs: [],
+  finished: false,
 };
 
 const contentReducer = (state = initialState, { type, payload }) => {
@@ -50,6 +52,8 @@ const contentReducer = (state = initialState, { type, payload }) => {
       };
     case CLEAR_CONTENT:
       return initialState;
+    case SET_FINISHED:
+      return { ...state, finished: true };
     default:
       return state;
   }

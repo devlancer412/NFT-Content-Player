@@ -1,4 +1,3 @@
-import Router from "next/router";
 import Link from "next/link";
 
 import { useEffect, useState } from "react";
@@ -6,10 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
-import { setAddress, setError } from "../../../store/actions/state";
 
 import Button from "../../../components/button/Button";
-import { clearContent } from "../../../store/actions/content";
+import { setFinished } from "../../../store/actions/content";
 
 const NewContent = () => {
   const [contentId, setContentId] = useState("");
@@ -27,8 +25,11 @@ const NewContent = () => {
   useEffect(() => {
     if (!contentOwner) {
       dispatch(setError("Please connect wallet"));
+      dispatch(setError("Redirecting to content manager page"));
       Router.push("/content/");
     } else if (!content.contentId) {
+      console.log(content);
+      console.log("Redirecting to upload blobs page");
       Router.push("/content/new/uploadblob");
     }
 
@@ -41,8 +42,7 @@ const NewContent = () => {
     setContentType(content.type);
     setPrivateBlobNumber(content.blobs.filter((item) => item.protected).length);
     setPublicBlobNumber(content.blobs.filter((item) => !item.protected).length);
-
-    dispatch(clearContent());
+    dispatch(setFinished());
   });
 
   return (
@@ -103,19 +103,19 @@ const NewContent = () => {
             </tbody>
           </table>
         </div>
-        <div className="flex flex-row justify-between w-full">
+        <div className="flex flex-row justify-between w-full mt-2">
           <Link href="/content">
             <Button
               size="base"
               text="Dashboard"
-              className="bg-indigo-600 text-white py-1 w-96"
+              className="bg-indigo-600 text-white py-1 w-5/12"
             />
           </Link>
           <Link href="/content/new/uploadblob">
             <Button
               size="base"
               text="Upload"
-              className="bg-white text-indigo-900 border-2 rounded-sm border-indigo-400 py-1 w-96"
+              className="bg-white text-indigo-900 border-2 rounded-sm border-indigo-400 py-1 w-5/12"
             />
           </Link>
         </div>

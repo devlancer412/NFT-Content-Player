@@ -84,18 +84,23 @@ export const newContentCreate =
         await sleep(expectedBlockTime);
       }
 
-      console.log(transactionReceipt);
+      // console.log(transactionReceipt);
 
-      const result = await window.proofContract.methods
-        .contentDistributorOf(contentId)
-        .call();
+      // const result = await window.proofContract.methods
+      //   .contentDistributorOf(contentId)
+      //   .call();
 
-      console.log(result);
+      // console.log(result);
 
       dispatch(setLoading(false));
       return true;
     } catch (err) {
-      console.log(err);
+      console.log(err.code);
+      if (err.code == -32602) {
+        dispatch(setLoading(false));
+        return true;
+      }
+
       await axios.delete(
         `/api/content/upload/${contentId}`,
         stringify(address)

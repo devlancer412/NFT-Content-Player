@@ -201,4 +201,17 @@ contract NCPProof is ERC721, Ownable {
                 )
                 : "";
     }
+
+    function newContentId() public view returns (uint256) {
+        require(isContentServer(msg.sender), "You can't create new content");
+
+        uint256 id;
+        do {
+            id = uint256(
+                keccak256(abi.encodePacked(msg.sender, block.timestamp))
+            );
+        } while (isSetted(id));
+
+        return id;
+    }
 }

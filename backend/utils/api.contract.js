@@ -2,7 +2,7 @@ require("dotenv").config();
 const ethers = require("ethers");
 const privateKey = require("../privatekey");
 
-const provider = ethers.getDefaultProvider("rinkeby");
+const provider = new ethers.getDefaultProvider("rinkeby");
 const proofAbi = require("../abi/NCPProof.json").abi;
 
 const wallet = new ethers.Wallet(privateKey, provider);
@@ -13,23 +13,14 @@ const proofContract = new ethers.Contract(
 );
 
 exports.getNewContentId = async () => {
+  console.log("Getting new content id...");
   try {
-    let contentId;
-    while (true) {
-      const random = ethers.utils.randomBytes(32);
-      const randomNumber = ethers.BigNumber.from(random);
+    const contentId = await proofContract.newContentId();
 
-      if (await proofContract.isSetted(randomNumber)) {
-        continue;
-      }
-
-      contentId = randomNumber.toHexString();
-      break;
-    }
-
+    console.log("new content Id :", contentId);
     return {
       success: true,
-      data: contentId,
+      data: contentId._hex,
     };
   } catch (err) {
     return {
@@ -65,4 +56,8 @@ exports.getNewContractSinature = async (address, contentId) => {
   const signature = await wallet.signMessage(messageHashBinary);
 
   return signature;
+};
+
+exports.getBigNumber = (number) => {
+  return new ethers.BigNumber.from(number);
 };

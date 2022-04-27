@@ -12,6 +12,7 @@ import {
   UPDATE_BLOB_LINK,
   CLEAR_CONTENT,
   SET_CONTENT_TYPE,
+  SET_FINISHED,
 } from "../types";
 
 import { setError, setLoading } from "./state";
@@ -94,8 +95,6 @@ export const uploadContentBlob =
   (name, address, contentId, blobs) => async (dispatch) => {
     dispatch(setLoading(true));
 
-    console.log(typeof contentId, contentId);
-
     try {
       for (let blob of blobs) {
         await axios.post(
@@ -109,10 +108,10 @@ export const uploadContentBlob =
         stringify({ name, address })
       );
 
-      console.log("Signature was got:", result.data.contentId);
+      console.log("Signature was got:", result.data.signature);
 
       const newContentResult = await dispatch(
-        newContentCreate(contentId, address, result.data.signature)
+        newContentCreate(result.data.contentId, address, result.data.signature)
       );
 
       if (!newContentResult) {
@@ -151,6 +150,13 @@ export const uploadContentBlob =
 export const clearContent = () => (dispatch) => {
   dispatch({
     type: CLEAR_CONTENT,
+    payload: null,
+  });
+};
+
+export const setFinished = () => (dispatch) => {
+  dispatch({
+    type: SET_FINISHED,
     payload: null,
   });
 };
