@@ -23,9 +23,34 @@ export const getPersonalContentList = async (address) => {
   }
 
   try {
-    const contents = await axios.get(`/api/content/${address}`);
+    const result = await axios.get(`/api/content/${address}`);
 
-    return { success: true, data: contents.data };
+    return { success: true, data: result.data };
+  } catch (err) {
+    if (!err.response) {
+      return { success: false, data: "Can't reache to server" };
+    } else {
+      return { success: false, data: err.response.data };
+    }
+  }
+};
+
+export const getContentData = async (address, contentId) => {
+  if (typeof address != "string") {
+    return { success: false, data: "Please connect to wallet" };
+  }
+  if (address.length != 42) {
+    return { success: false, data: "Please connect to wallet" };
+  }
+
+  if (!contentId) {
+    return { success: false, data: "Please insert correct content id" };
+  }
+
+  try {
+    const { data } = await axios.get(`/api/content/${address}/${contentId}`);
+
+    return { success: true, data };
   } catch (err) {
     if (!err.response) {
       return { success: false, data: "Can't reache to server" };

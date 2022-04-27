@@ -185,6 +185,29 @@ exports.getContents = async (req, res) => {
   }
 };
 
+exports.getContentData = async (req, res) => {
+  const { address, contentId } = req.params;
+
+  try {
+    const content = await Content.find({ contentId: contentId });
+
+    const result = await contractApi.hasNFTForContents(address, contentId);
+
+    if (!result.success) {
+      return res.status(500).json(result.data);
+    }
+
+    const { name, type, owner } = content;
+    const blobs = content.content.filter(
+      (blob) => result.data || !blob.protected
+    );
+
+    res.json({ name, contentId, type, owner, blobs });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
 exports.deleteContent = async (req, res) => {
   const { contentId } = req.params;
   const { address } = req.body;
