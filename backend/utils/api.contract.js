@@ -15,12 +15,12 @@ const proofContract = new ethers.Contract(
 exports.getNewContentId = async () => {
   console.log("Getting new content id...");
   try {
-    const contentId = await proofContract.newContentId();
+    const result = await proofContract.newContentId();
 
     console.log("new content Id :", contentId);
     return {
       success: true,
-      data: contentId._hex,
+      data: result._hex,
     };
   } catch (err) {
     return {
@@ -31,15 +31,93 @@ exports.getNewContentId = async () => {
 };
 
 exports.isContentServer = async (address) => {
-  return await proofContract.isContentServer(address);
+  console.log("Is content server...");
+  try {
+    const result = await proofContract.isContentServer(address);
+
+    console.log("Is content server :", result);
+    return {
+      success: true,
+      data: result,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      data: err.reason,
+    };
+  }
 };
 
 exports.isContentDistributor = async (address, contentId) => {
-  return await proofContract.isDistributorOf(address, contentId);
+  console.log("Is content distributor...");
+  try {
+    const result = await proofContract.isDistributorOf(address, contentId);
+
+    console.log("Is content distributor :", result);
+    return {
+      success: true,
+      data: result,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      data: err.reason,
+    };
+  }
 };
 
 exports.setContentServer = async (address, setVale) => {
-  await proofContract.setContentServer(address, setVale);
+  console.log("Setting content server...");
+  try {
+    await proofContract.setContentServer(address, setVale);
+
+    console.log("Setting content server :", { address, setVale });
+    return {
+      success: true,
+      data: setVale,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      data: err.reason,
+    };
+  }
+};
+
+exports.hasNFTForContent = async (address, contentId) => {
+  console.log("Has NFT for content...");
+  try {
+    const result = await proofContract.hasNFTForContent(address, contentId);
+
+    console.log("Has NFT for content :", result);
+    return {
+      success: true,
+      data: result,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      data: err.reason,
+    };
+  }
+};
+
+exports.hasNFTForContents = async (address, contentIds) => {
+  console.log("Has NFT for content...");
+  try {
+    const result = await proofContract.hasNFTForContents(address, contentIds);
+
+    console.log("Has NFT for content :", result);
+    return {
+      success: true,
+      data: result,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      data: err.reason,
+    };
+  }
 };
 
 exports.getNewContractSinature = async (address, contentId) => {

@@ -1,4 +1,11 @@
 //SPDX-License-Identifier: Unlicense
+//
+//
+//  @Name       NFT-Content-Player-Proof contract
+//  @Author     Joseph Anderson
+//  @Type       ERC721
+//  @Date       27/4/2022
+
 pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
@@ -139,6 +146,30 @@ contract NCPProof is ERC721, Ownable {
         return false;
     }
 
+    function hasNFTForContents(address owner, uint256[] memory contentIds)
+        public
+        view
+        returns (bool[] memory)
+    {
+        uint256 len = contentIds.length;
+        bool[] memory result = new bool[](len);
+        uint256 total = countOfNFT();
+
+        for (uint256 i = 0; i < len; i++) {
+            result[i] = false;
+            for (uint256 token = 0; token < total; token++) {
+                if (
+                    ownerOf(token) == owner && contentOf(token) == contentIds[i]
+                ) {
+                    result[i] = true;
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
+
     function contentOf(uint256 tokenId) public view returns (uint256) {
         return _nftContentId[tokenId];
     }
@@ -203,8 +234,6 @@ contract NCPProof is ERC721, Ownable {
     }
 
     function newContentId() public view returns (uint256) {
-        require(isContentServer(msg.sender), "You can't create new content");
-
         uint256 id;
         do {
             id = uint256(

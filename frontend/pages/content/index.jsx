@@ -50,6 +50,7 @@ const ContentManager = () => {
       </div>
       <div className="main flex flex-col w-full p-5 border-y-2 border-gray-700 h-full flex-1">
         {contents.map((element, index) => {
+          console.log(element);
           return (
             <div
               className="content-view flex flex-row w-full mb-10"
@@ -66,27 +67,37 @@ const ContentManager = () => {
                 </div>
                 <div className="content-edit flex flex-row justify-between font-semibold">
                   <div className="content-ct flex flex-row justify-start">
-                    <Button
-                      size="base"
-                      icon={<FontAwesomeIcon icon={faList} />}
-                      text="Contents"
-                      className="border border-2 border-indigo-200 text-indigo-600 py-1 w-40 mr-3"
-                    />
+                    <Link href={`/content/${element.contentId}`}>
+                      <Button
+                        size="base"
+                        icon={<FontAwesomeIcon icon={faList} />}
+                        text="Contents"
+                        className="border border-2 border-indigo-200 text-indigo-600 py-1 w-40 mr-3"
+                      />
+                    </Link>
 
-                    <Button
-                      size="base"
-                      icon={<FontAwesomeIcon icon={faExternalLinkAlt} />}
-                      text="Transfer"
-                      className="border border-2 border-indigo-200 text-indigo-600 py-1 w-40"
-                    />
+                    {element.hasNFT ? (
+                      <Link href={`/content/${element.cotentId}/transfer`}>
+                        <Button
+                          size="base"
+                          icon={<FontAwesomeIcon icon={faExternalLinkAlt} />}
+                          text="Transfer"
+                          className="border border-2 border-indigo-200 text-indigo-600 py-1 w-40"
+                        />
+                      </Link>
+                    ) : null}
                   </div>
                   <div className="content-ct flex flex-row justify-end">
-                    <Button
-                      size="base"
-                      icon={<FontAwesomeIcon icon={faHammer} />}
-                      text="Mint"
-                      className="bg-indigo-600 text-white py-1 w-40"
-                    />
+                    {element.isOwner ? (
+                      <Link href={`/content/${element.contentId}/mint`}>
+                        <Button
+                          size="base"
+                          icon={<FontAwesomeIcon icon={faHammer} />}
+                          text="Mint"
+                          className="bg-indigo-600 text-white py-1 w-40"
+                        />
+                      </Link>
+                    ) : null}
                   </div>
                 </div>
               </div>

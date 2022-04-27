@@ -160,8 +160,26 @@ exports.getContents = async (req, res) => {
   const { address } = req.params;
 
   try {
-    const contents = await Content.find({ address: address.toLowerCase() });
-    res.json(contents);
+    const contents = await Content.find();
+
+    const contentIds = contents.map((content) => content.contentId);
+
+    const result = await contractApi.hasNFTForContents(address, contentIds);
+
+    if (!result.success) {
+      return res.status(500).json(result.data);
+    }
+
+    const results = contents.map((content, index) => {
+      return {
+        name: content.name,
+        contentId: content.contentId,
+        isOwner: content.address == address,
+        hasNFT: result.data[index],
+      };
+    });
+
+    res.json(results);
   } catch (err) {
     res.status(500).json(err);
   }

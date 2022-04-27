@@ -9,7 +9,7 @@ export const getContentList = async () => {
     if (!err.response) {
       return { success: false, data: "Can't reache to server" };
     } else {
-      return { success: false, data: stringify(err.response.data) };
+      return { success: false, data: err.response.data };
     }
   }
 };
@@ -30,7 +30,7 @@ export const getPersonalContentList = async (address) => {
     if (!err.response) {
       return { success: false, data: "Can't reache to server" };
     } else {
-      return { success: false, data: stringify(err.response.data) };
+      return { success: false, data: err.response.data };
     }
   }
 };
