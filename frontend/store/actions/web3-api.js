@@ -34,6 +34,10 @@ export const connectWallet = () => async (dispatch) => {
 
     window.provider = await window.web3Modal.connect();
 
+    window.provider.on("accountsChanged", (accounts) => {
+      console.log("ACCOUNTS CHANGED" + accounts[0]);
+    });
+
     window.web3 = new Web3(window.provider);
     window.proofContract = await new web3.eth.Contract(
       abi,
@@ -49,6 +53,13 @@ export const connectWallet = () => async (dispatch) => {
 
 export const newContentCreate =
   (contentId, address, signature) => async (dispatch) => {
+    if (window.web3.currentProvider.selectedAddress != address) {
+      dispatch(
+        setError("Your account has changed, please reconnect to wallet")
+      );
+      return true;
+    }
+
     dispatch(setLoading(true));
 
     console.log({ contentId, address, signature });
@@ -92,6 +103,13 @@ export const newContentCreate =
 
 export const transferDistribution =
   (contentId, address, toAddress) => async (dispatch) => {
+    if (window.web3.currentProvider.selectedAddress != address) {
+      dispatch(
+        setError("Your account has changed, please reconnect to wallet")
+      );
+      return true;
+    }
+
     dispatch(setLoading(true));
 
     console.log({ contentId, address, toAddress });
@@ -129,6 +147,13 @@ export const transferDistribution =
 
 export const mintNFTForContent =
   (contentId, address, toAddress) => async (dispatch) => {
+    if (window.web3.currentProvider.selectedAddress != address) {
+      dispatch(
+        setError("Your account has changed, please reconnect to wallet")
+      );
+      return true;
+    }
+
     dispatch(setLoading(true));
 
     console.log({ contentId, address });
