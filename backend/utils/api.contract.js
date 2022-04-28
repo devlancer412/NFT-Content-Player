@@ -17,7 +17,7 @@ exports.getNewContentId = async () => {
   try {
     const result = await proofContract.newContentId();
 
-    console.log("new content Id :", contentId);
+    console.log("new content Id :", result);
     return {
       success: true,
       data: result._hex,
@@ -108,6 +108,24 @@ exports.hasNFTForContents = async (address, contentIds) => {
     const result = await proofContract.hasNFTForContents(address, contentIds);
 
     console.log("Has NFT for content :", result);
+    return {
+      success: true,
+      data: result,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      data: err.reason,
+    };
+  }
+};
+
+exports.canSeeProtected = async (address, contentIds) => {
+  console.log("Get permittion to access protected...");
+  try {
+    const result = await proofContract.canSeeProtected(address, contentIds);
+
+    console.log("Get permittion to access protected :", result);
     return {
       success: true,
       data: result,

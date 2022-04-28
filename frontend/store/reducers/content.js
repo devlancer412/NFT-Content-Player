@@ -9,6 +9,7 @@ import {
   CLEAR_CONTENT,
   SET_CONTENT_TYPE,
   SET_FINISHED,
+  SET_SIGNATURED,
 } from "../types";
 
 const initialState = {
@@ -17,6 +18,7 @@ const initialState = {
   type: "Type-1",
   blobs: [],
   finished: false,
+  signatured: false,
 };
 
 const contentReducer = (state = initialState, { type, payload }) => {
@@ -54,6 +56,8 @@ const contentReducer = (state = initialState, { type, payload }) => {
       return initialState;
     case SET_FINISHED:
       return { ...state, finished: true };
+    case SET_SIGNATURED:
+      return { ...state, signatured: true };
     default:
       return state;
   }

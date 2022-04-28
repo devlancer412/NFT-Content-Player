@@ -14,3 +14,4 @@ export const UPDATE_BLOB = "UPDATE_BLOB";
 export const UPDATE_BLOB_LINK = "UPDATE_BLOB_LINK";
 export const CLEAR_CONTENT = "CLEAR_CONTENT";
 export const SET_FINISHED = "SET_FINISHED";
+export const SET_SIGNATURED = "SET_SIGNATURED";

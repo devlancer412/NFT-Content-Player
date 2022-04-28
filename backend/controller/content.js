@@ -3,6 +3,7 @@ const ObjectID = require("mongoose").Types.ObjectId;
 const contractApi = require("../utils/api.contract");
 
 exports.newContentId = async (req, res) => {
+  console.log("Routing get content id...");
   const result = await contractApi.getNewContentId();
 
   if (!result.success) {
@@ -164,6 +165,9 @@ exports.getContents = async (req, res) => {
 
     const contentIds = contents.map((content) => content.contentId);
 
+    if (!contentIds.length) {
+      return res.json([]);
+    }
     const result = await contractApi.hasNFTForContents(address, contentIds);
 
     if (!result.success) {
@@ -189,20 +193,22 @@ exports.getContentData = async (req, res) => {
   const { address, contentId } = req.params;
 
   try {
-    const content = await Content.find({ contentId: contentId });
+    const content = await Content.findOne({ contentId: contentId });
 
-    const result = await contractApi.hasNFTForContents(address, contentId);
+    const result = await contractApi.canSeeProtected(address, contentId);
 
     if (!result.success) {
       return res.status(500).json(result.data);
     }
 
-    const { name, type, owner } = content;
+    console.log(result);
+    const { name, type } = content;
     const blobs = content.content.filter(
       (blob) => result.data || !blob.protected
     );
 
-    res.json({ name, contentId, type, owner, blobs });
+    const resData = { name, contentId, type, blobs };
+    res.json(resData);
   } catch (err) {
     res.status(500).json(err);
   }

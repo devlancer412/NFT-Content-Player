@@ -26,7 +26,10 @@ const ImageDropZone = ({ fileHandle }) => {
   });
   return (
     <div className="w-full bg-black h-full">
-      <div className="w-full h-full" {...getRootProps()}>
+      <div
+        className="w-full h-full flex flex-col justify-center"
+        {...getRootProps()}
+      >
         <input {...getInputProps()} />
         {src.preview ? (
           <img

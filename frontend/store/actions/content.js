@@ -13,6 +13,7 @@ import {
   CLEAR_CONTENT,
   SET_CONTENT_TYPE,
   SET_FINISHED,
+  SET_SIGNATURED,
 } from "../types";
 
 import { setError, setLoading } from "./state";
@@ -126,6 +127,7 @@ export const uploadContentBlob =
         return;
       }
 
+      dispatch(setSignatured());
       Router.push("/content/new");
     } catch (err) {
       console.log(err);
@@ -157,6 +159,13 @@ export const clearContent = () => (dispatch) => {
 export const setFinished = () => (dispatch) => {
   dispatch({
     type: SET_FINISHED,
+    payload: null,
+  });
+};
+
+export const setSignatured = () => (dispatch) => {
+  dispatch({
+    type: SET_SIGNATURED,
     payload: null,
   });
 };

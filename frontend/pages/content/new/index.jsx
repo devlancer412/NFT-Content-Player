@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,48 +9,46 @@ import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "../../../components/button/Button";
 import { setFinished } from "../../../store/actions/content";
+import { setError } from "../../../store/actions/state";
 
 const NewContent = () => {
-  const [contentId, setContentId] = useState("");
-  const [contentName, setContentName] = useState("");
+  const router = useRouter();
+
   const [privateBlobNumber, setPrivateBlobNumber] = useState("");
   const [publicBlobNumber, setPublicBlobNumber] = useState("");
-  const [contentType, setContentType] = useState("");
 
   const contentOwner = useSelector((store) => store.state.address);
   const content = useSelector((store) => store.content);
   const dispatch = useDispatch();
 
-  useEffect(() => {});
-
   useEffect(() => {
+    console.log(contentOwner);
     if (!contentOwner) {
       dispatch(setError("Please connect wallet"));
       dispatch(setError("Redirecting to content manager page"));
-      Router.push("/content/");
-    } else if (!content.contentId) {
+      router.push("/content/");
+    }
+  }, [contentOwner]);
+
+  useEffect(() => {
+    if (!content.contentId || !content.signatured) {
       console.log(content);
       console.log("Redirecting to upload blobs page");
-      Router.push("/content/new/uploadblob");
+      router.push("/content/new/uploadblob");
     }
 
-    if (!content.contentId) {
-      return;
-    }
-
-    setContentId(content.contentId);
-    setContentName(content.name);
-    setContentType(content.type);
     setPrivateBlobNumber(content.blobs.filter((item) => item.protected).length);
     setPublicBlobNumber(content.blobs.filter((item) => !item.protected).length);
-    dispatch(setFinished());
-  });
+    if (!content.finished) {
+      dispatch(setFinished());
+    }
+  }, [content]);
 
   return (
     <main className="flex flex-col w-full flex-1 px-5">
       <div className="header">
         <h1 className="text-3xl font-bold leading-loose font-bold">
-          Blob Upload - {contentName}
+          Blob Upload - {content.name}
         </h1>
       </div>
       <div className="main flex flex-col w-full p-5 h-full flex-1 justify-center py-auto">
@@ -65,7 +64,7 @@ const NewContent = () => {
                   Content ID
                 </td>
                 <td className="text-gray-900 font-bold px-4 py-3 whitespace-nowrap border-r overflow-clip">
-                  {contentId}
+                  {content.contentId}
                 </td>
               </tr>
               <tr className="bg-white border-b">
@@ -73,7 +72,7 @@ const NewContent = () => {
                   Name
                 </td>
                 <td className="text-gray-900 px-4 py-3 whitespace-nowrap border-r overflow-clip">
-                  {contentName}
+                  {content.name}
                 </td>
               </tr>
               <tr className="bg-white border-b">
@@ -89,7 +88,7 @@ const NewContent = () => {
                   Type
                 </td>
                 <td className="text-gray-900 px-6 py-4 whitespace-nowrap border-r overflow-clip">
-                  {contentType}
+                  {content.type}
                 </td>
               </tr>
               <tr className="bg-white border-b">

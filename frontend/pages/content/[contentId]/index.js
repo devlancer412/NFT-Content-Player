@@ -32,9 +32,9 @@ const ContentViewer = (props) => {
     }
   });
 
-  useEffect(() => {
+  useEffect(async () => {
     dispatch(setLoading(true));
-    const result = getContentData(address, contentId);
+    const result = await getContentData(address, contentId);
     dispatch(setLoading(false));
     if (!result.success) {
       dispatch(setError(result.data));

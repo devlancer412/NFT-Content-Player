@@ -5,6 +5,7 @@
 //  @Author     Joseph Anderson
 //  @Type       ERC721
 //  @Date       27/4/2022
+//  @version    0.0.1
 
 pragma solidity ^0.8.0;
 
@@ -63,7 +64,7 @@ contract NCPProof is ERC721, Ownable {
 
     function getSigner(bytes32 hash, bytes memory signature)
         internal
-        view
+        pure
         returns (address)
     {
         bytes32 signedHash = keccak256(
@@ -193,6 +194,16 @@ contract NCPProof is ERC721, Ownable {
                 : contentDistributorOf(contentId) == owner;
     }
 
+    function canSeeProtected(address owner, uint256 contentId)
+        public
+        view
+        returns (bool)
+    {
+        return
+            isDistributorOf(owner, contentId) ||
+            hasNFTForContent(owner, contentId);
+    }
+
     function _burn(uint256 tokenId) internal override {
         super._burn(tokenId);
     }
@@ -234,6 +245,7 @@ contract NCPProof is ERC721, Ownable {
     }
 
     function newContentId() public view returns (uint256) {
+        require(isContentServer(msg.sender), "You don't permitted this action");
         uint256 id;
         do {
             id = uint256(
