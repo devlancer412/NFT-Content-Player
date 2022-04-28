@@ -84,14 +84,6 @@ export const newContentCreate =
         await sleep(expectedBlockTime);
       }
 
-      // console.log(transactionReceipt);
-
-      // const result = await window.proofContract.methods
-      //   .contentDistributorOf(contentId)
-      //   .call();
-
-      // console.log(result);
-
       dispatch(setLoading(false));
       return true;
     } catch (err) {
@@ -105,6 +97,80 @@ export const newContentCreate =
         `/api/content/upload/${contentId}`,
         stringify(address)
       );
+
+      dispatch(setError(err.message));
+
+      dispatch(setLoading(false));
+      return false;
+    }
+  };
+
+export const transferDistribution =
+  (contentId, address, toAddress) => async (dispatch) => {
+    dispatch(setLoading(true));
+
+    console.log({ contentId, address });
+
+    try {
+      const txHash = await window.proofContract.methods
+        .transferContentRights(contentId, toAddress)
+        .call();
+
+      let transactionReceipt = null;
+      while (transactionReceipt == null) {
+        // Waiting expectedBlockTime until the transaction is mined
+        transactionReceipt = await window.web3.eth.getTransactionReceipt(
+          txHash
+        );
+        console.log("waiting");
+        await sleep(expectedBlockTime);
+      }
+
+      dispatch(setLoading(false));
+      return true;
+    } catch (err) {
+      console.log(err.code);
+      if (err.code == -32602) {
+        dispatch(setLoading(false));
+        return true;
+      }
+
+      dispatch(setError(err.message));
+
+      dispatch(setLoading(false));
+      return false;
+    }
+  };
+
+export const mintNFTForContent =
+  (contentId, address, toAddress) => async (dispatch) => {
+    dispatch(setLoading(true));
+
+    console.log({ contentId, address });
+
+    try {
+      const txHash = await window.proofContract.methods
+        .mint(toAddress, contentId)
+        .call();
+
+      let transactionReceipt = null;
+      while (transactionReceipt == null) {
+        // Waiting expectedBlockTime until the transaction is mined
+        transactionReceipt = await window.web3.eth.getTransactionReceipt(
+          txHash
+        );
+        console.log("waiting");
+        await sleep(expectedBlockTime);
+      }
+
+      dispatch(setLoading(false));
+      return true;
+    } catch (err) {
+      console.log(err.code);
+      if (err.code == -32602) {
+        dispatch(setLoading(false));
+        return true;
+      }
 
       dispatch(setError(err.message));
 

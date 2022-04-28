@@ -12,13 +12,24 @@ import {
   faHammer,
 } from "@fortawesome/free-solid-svg-icons";
 
+import Modal from "../../components/Form/modal/modal";
 import Button from "../../components/button/Button";
 
 import { getPersonalContentList } from "../../services/content-api";
 import { setError, setLoading } from "../../store/actions/state";
 
+import TransferModalContent from "../../components/Form/modal/transfer-template";
+import MintModalContent from "../../components/Form/modal/mint-template";
+
+import {
+  transferDistribution,
+  mintNFTForContent,
+} from "../../store/actions/web3-api";
+
 const ContentManager = () => {
   const [contents, setContents] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
 
   const address = useSelector((store) => store.state.address);
   const dispatch = useDispatch();
@@ -43,6 +54,47 @@ const ContentManager = () => {
     dispatch(setLoading(false));
   }, [address]);
 
+  const transferDistributionHandle = async (contentId, toAddress) => {
+    console.log({ contentId, toAddress });
+
+    const result = await dispatch(
+      transferDistribution(contentId, address, toAddress)
+    );
+
+    if (result) {
+      setShowModal(false);
+    }
+  };
+
+  const mintNFTHandle = async (contentId, toAddress) => {
+    console.log({ contentId, toAddress });
+
+    const result = await dispatch(
+      mintNFTForContent(contentId, address, toAddress)
+    );
+
+    if (result) {
+      setShowModal(false);
+    }
+  };
+
+  const transferModal = (content) => {
+    setModalContent(
+      <TransferModalContent
+        content={content}
+        handleSubmit={transferDistributionHandle}
+      />
+    );
+    setShowModal(true);
+  };
+
+  const mintModal = (content) => {
+    setModalContent(
+      <MintModalContent content={content} handleSubmit={mintNFTHandle} />
+    );
+    setShowModal(true);
+  };
+
   return (
     <main className="flex flex-col w-full flex-1 px-5">
       <div className="header">
@@ -50,7 +102,6 @@ const ContentManager = () => {
       </div>
       <div className="main flex flex-col w-full p-5 border-y-2 border-gray-700 h-full flex-1">
         {contents.map((element, index) => {
-          console.log(element);
           return (
             <div
               className="content-view flex flex-row w-full mb-10"
@@ -76,27 +127,25 @@ const ContentManager = () => {
                       />
                     </Link>
 
-                    {element.hasNFT ? (
-                      <Link href={`/content/${element.cotentId}/transfer`}>
-                        <Button
-                          size="base"
-                          icon={<FontAwesomeIcon icon={faExternalLinkAlt} />}
-                          text="Transfer"
-                          className="border border-2 border-indigo-200 text-indigo-600 py-1 w-40"
-                        />
-                      </Link>
+                    {address == element.owner ? (
+                      <Button
+                        size="base"
+                        icon={<FontAwesomeIcon icon={faExternalLinkAlt} />}
+                        text="Transfer"
+                        onClick={() => transferModal(element)}
+                        className="border border-2 border-indigo-200 text-indigo-600 py-1 w-40"
+                      />
                     ) : null}
                   </div>
                   <div className="content-ct flex flex-row justify-end">
-                    {element.isOwner ? (
-                      <Link href={`/content/${element.contentId}/mint`}>
-                        <Button
-                          size="base"
-                          icon={<FontAwesomeIcon icon={faHammer} />}
-                          text="Mint"
-                          className="bg-indigo-600 text-white py-1 w-40"
-                        />
-                      </Link>
+                    {address == element.owner ? (
+                      <Button
+                        size="base"
+                        icon={<FontAwesomeIcon icon={faHammer} />}
+                        text="Mint"
+                        onClick={() => mintModal(element)}
+                        className="bg-indigo-600 text-white py-1 w-40"
+                      />
                     ) : null}
                   </div>
                 </div>
@@ -120,6 +169,9 @@ const ContentManager = () => {
           </Link>
         </div>
       </div>
+      <Modal show={showModal} onClose={() => setShowModal(false)}>
+        {modalContent}
+      </Modal>
     </main>
   );
 };

@@ -168,18 +168,12 @@ exports.getContents = async (req, res) => {
     if (!contentIds.length) {
       return res.json([]);
     }
-    const result = await contractApi.hasNFTForContents(address, contentIds);
-
-    if (!result.success) {
-      return res.status(500).json(result.data);
-    }
 
     const results = contents.map((content, index) => {
       return {
         name: content.name,
         contentId: content.contentId,
-        isOwner: content.address == address,
-        hasNFT: result.data[index],
+        owner: content.address,
       };
     });
 
@@ -207,7 +201,7 @@ exports.getContentData = async (req, res) => {
       (blob) => result.data || !blob.protected
     );
 
-    const resData = { name, contentId, type, blobs };
+    const resData = { name, contentId, type, blobs, owner: content.address };
     res.json(resData);
   } catch (err) {
     res.status(500).json(err);

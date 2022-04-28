@@ -98,7 +98,7 @@ contract NCPProof is ERC721, Ownable {
         return true;
     }
 
-    function transferContentRights(uint256 contentId, address newOwner)
+    function transferNFTRights(uint256 contentId, address newOwner)
         public
         returns (bool)
     {
@@ -112,6 +112,15 @@ contract NCPProof is ERC721, Ownable {
         }
 
         return false;
+    }
+
+    function transferContentRights(uint256 contentId, address newOwner) public {
+        require(
+            _distributionOwner[contentId] == msg.sender,
+            "You are not distributor of this content"
+        );
+
+        _distributionOwner[contentId] = newOwner;
     }
 
     function mint(address to, uint256 contentId) public returns (uint256) {

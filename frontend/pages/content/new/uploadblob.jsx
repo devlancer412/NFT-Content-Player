@@ -6,8 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faUpload, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "../../../components/button/Button";
-import Input from "../../../components/Form/input";
-import Select from "../../../components/Form/select";
+import Input from "../../../components/Form/controls/input";
+import Select from "../../../components/Form/controls/select";
 
 import { setError } from "../../../store/actions/state";
 
@@ -97,10 +97,6 @@ const BlobUploadManager = () => {
       return dispatch(
         setError("You can't upload. Please connect to your wallet.")
       );
-    }
-
-    if (!name) {
-      return dispatch(setError("Please insert Content name"));
     }
 
     dispatch(uploadContentBlob(name, address, contentId, blobs));
