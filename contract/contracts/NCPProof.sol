@@ -192,6 +192,21 @@ contract NCPProof is ERC721, Ownable {
         return _distributionOwner[contentId];
     }
 
+    function contentDistributorsOf(uint256[] memory contentIds)
+        public
+        view
+        returns (address[] memory)
+    {
+        uint256 len = contentIds.length;
+        address[] memory results = new address[](len);
+
+        for (uint256 i = 0; i < len; i++) {
+            results[i] = _distributionOwner[contentIds[i]];
+        }
+
+        return results;
+    }
+
     function isDistributorOf(address owner, uint256 contentId)
         public
         view
