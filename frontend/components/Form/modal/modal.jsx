@@ -14,7 +14,7 @@ const Modal = ({ show, onClose, children }) => {
   };
 
   const modalContent = show ? (
-    <div className="fixed t-0 l-0 w-screen h-screen flex justify-center items-center bg-gray-500">
+    <div className="fixed t-0 l-0 w-screen h-screen flex justify-center items-center bg-gray-500 bg-opacity-40">
       <div className="bg-white w-[500px] h-[400px] rounded-2xl p-4 relative">
         <div className="flex justify-end text-2xl absolute top-2 right-4 min-h-full">
           <a href="#" onClick={handleCloseClick}>

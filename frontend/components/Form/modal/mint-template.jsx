@@ -12,7 +12,7 @@ const MintModalContent = ({ content, handleSubmit }) => {
     <div className="w-full h-[350px] flex flex-col justify-between text-left">
       <div className="header w-full flex flex-col">
         <h1 className="w-full text-5xl">{content.name}</h1>
-        <span className="w-full">{content.owner}</span>
+        <span className="w-full break-words mt-3">{content.contentId}</span>
       </div>
       <div className="body w-full flex-1 flex flex-col justify-center pb-5">
         <Input

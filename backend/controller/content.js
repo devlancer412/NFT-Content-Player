@@ -169,11 +169,20 @@ exports.getContents = async (req, res) => {
       return res.json([]);
     }
 
+    const isDistribuorRes = await contractApi.isDistributorOfContents(
+      address,
+      contentIds
+    );
+
+    if (!isDistribuorRes.success) {
+      return res.status(500).json(isDistribuorRes.data);
+    }
+
     const results = contents.map((content, index) => {
       return {
         name: content.name,
         contentId: content.contentId,
-        owner: content.address,
+        isOwner: isDistribuorRes.data[index],
       };
     });
 

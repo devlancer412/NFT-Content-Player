@@ -41,7 +41,7 @@ const ContentManager = () => {
     }
   });
 
-  useEffect(async () => {
+  const getContents = async () => {
     dispatch(setLoading(true));
     const result = await getPersonalContentList(address);
 
@@ -52,6 +52,10 @@ const ContentManager = () => {
     }
 
     dispatch(setLoading(false));
+  };
+
+  useEffect(() => {
+    getContents();
   }, [address]);
 
   const transferDistributionHandle = async (contentId, toAddress) => {
@@ -62,6 +66,7 @@ const ContentManager = () => {
     );
 
     if (result) {
+      getContents();
       setShowModal(false);
     }
   };
@@ -127,7 +132,7 @@ const ContentManager = () => {
                       />
                     </Link>
 
-                    {address == element.owner ? (
+                    {element.isOwner ? (
                       <Button
                         size="base"
                         icon={<FontAwesomeIcon icon={faExternalLinkAlt} />}
@@ -138,7 +143,7 @@ const ContentManager = () => {
                     ) : null}
                   </div>
                   <div className="content-ct flex flex-row justify-end">
-                    {address == element.owner ? (
+                    {element.isOwner ? (
                       <Button
                         size="base"
                         icon={<FontAwesomeIcon icon={faHammer} />}

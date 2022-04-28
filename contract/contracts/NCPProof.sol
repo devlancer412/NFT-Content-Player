@@ -132,6 +132,7 @@ contract NCPProof is ERC721, Ownable {
 
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
+        _nftContentId[tokenId] = contentId;
 
         _mint(to, tokenId);
 
@@ -192,16 +193,16 @@ contract NCPProof is ERC721, Ownable {
         return _distributionOwner[contentId];
     }
 
-    function contentDistributorsOf(uint256[] memory contentIds)
+    function isDistributorOfContents(address owner, uint256[] memory contentIds)
         public
         view
-        returns (address[] memory)
+        returns (bool[] memory)
     {
         uint256 len = contentIds.length;
-        address[] memory results = new address[](len);
+        bool[] memory results = new bool[](len);
 
         for (uint256 i = 0; i < len; i++) {
-            results[i] = _distributionOwner[contentIds[i]];
+            results[i] = owner == _distributionOwner[contentIds[i]];
         }
 
         return results;

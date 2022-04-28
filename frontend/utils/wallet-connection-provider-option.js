@@ -4,7 +4,8 @@ const providerOptions = {
   // Example with injected providers
   injected: {
     display: {
-      name: "Metamask",
+      logo: "data:image/gif;base64,INSERT_BASE64_STRING",
+      name: "Injected",
       description: "Connect with the provider in your Browser",
     },
     package: null,
@@ -12,6 +13,7 @@ const providerOptions = {
   // Example with WalletConnect provider
   walletconnect: {
     display: {
+      logo: "data:image/gif;base64,INSERT_BASE64_STRING",
       name: "Mobile",
       description: "Scan qrcode with your mobile wallet",
     },

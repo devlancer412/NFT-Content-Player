@@ -32,31 +32,15 @@ export const connectWallet = () => async (dispatch) => {
       WalletConnectProvider,
     });
 
-    window.provider = await web3Modal.connect();
+    window.provider = await window.web3Modal.connect();
 
-    window.provider.on("accoutsChanged", (e) => {
-      dispatch(setAddress(""));
-      dispatch(setError("Wallet locked"));
-    });
-
-    window.provider.on("error", (e) => dispatch(setError("WS Error : " + e)));
-    window.provider.on("end", (e) => dispatch(setError("WS End : " + e)));
-
-    window.provider.on("disconnect", (error) => {
-      dispatch(setError(error));
-    });
-
-    window.provider.on("connect", (info) => {
-      toastr.info(info);
-    });
-
-    window.web3 = new Web3(provider);
+    window.web3 = new Web3(window.provider);
     window.proofContract = await new web3.eth.Contract(
       abi,
       process.env.PROOF_CONTRACT_ADDRESS
     );
 
-    dispatch(setAddress(web3.currentProvider.selectedAddress));
+    dispatch(setAddress(window.web3.currentProvider.selectedAddress));
   } catch (err) {
     dispatch(setError(err));
   }
@@ -69,6 +53,7 @@ export const newContentCreate =
 
     console.log({ contentId, address, signature });
 
+    console.log({ contentId, address, signature });
     try {
       const txHash = await window.proofContract.methods
         .newContent(contentId, address, signature)
@@ -109,12 +94,12 @@ export const transferDistribution =
   (contentId, address, toAddress) => async (dispatch) => {
     dispatch(setLoading(true));
 
-    console.log({ contentId, address });
+    console.log({ contentId, address, toAddress });
 
     try {
       const txHash = await window.proofContract.methods
-        .transferContentRights(contentId, toAddress)
-        .call();
+        .transferContentRights(contentId, toAddress.toLowerCase())
+        .send({ from: address });
 
       let transactionReceipt = null;
       while (transactionReceipt == null) {
@@ -129,7 +114,7 @@ export const transferDistribution =
       dispatch(setLoading(false));
       return true;
     } catch (err) {
-      console.log(err.code);
+      console.log(err);
       if (err.code == -32602) {
         dispatch(setLoading(false));
         return true;
@@ -151,7 +136,7 @@ export const mintNFTForContent =
     try {
       const txHash = await window.proofContract.methods
         .mint(toAddress, contentId)
-        .call();
+        .send({ from: address });
 
       let transactionReceipt = null;
       while (transactionReceipt == null) {

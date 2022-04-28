@@ -2,7 +2,7 @@ require("dotenv").config();
 const ethers = require("ethers");
 const privateKey = require("../privatekey");
 
-const provider = new ethers.getDefaultProvider("rinkeby");
+const provider = new ethers.getDefaultProvider(process.env.TESTNET_HTTP_URL);
 const proofAbi = require("../abi/NCPProof.json").abi;
 
 const wallet = new ethers.Wallet(privateKey, provider);
@@ -49,7 +49,7 @@ exports.isContentServer = async (address) => {
 };
 
 exports.isContentDistributor = async (address, contentId) => {
-  console.log("Is content distributor...");
+  console.log("Is content distributor...", { address, contentId });
   try {
     const result = await proofContract.isDistributorOf(address, contentId);
 
@@ -108,6 +108,27 @@ exports.hasNFTForContents = async (address, contentIds) => {
     const result = await proofContract.hasNFTForContents(address, contentIds);
 
     console.log("Has NFT for content :", result);
+    return {
+      success: true,
+      data: result,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      data: err.reason,
+    };
+  }
+};
+
+exports.isDistributorOfContents = async (address, contentIds) => {
+  console.log("Is distributor of contents...", { address, contentIds });
+  try {
+    const result = await proofContract.isDistributorOfContents(
+      address,
+      contentIds
+    );
+
+    console.log("Is distributor of contents :", result);
     return {
       success: true,
       data: result,
