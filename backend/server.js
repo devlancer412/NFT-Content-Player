@@ -9,9 +9,10 @@ const routes = require("./routes");
 global.__basedir = __dirname;
 
 // Database connection
-(async () => {
-  await require("./config/database");
-})();
+require("./config/database");
+
+// Set remove temporary file schedule
+require("./utils/temp-cleaner");
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
