@@ -17,7 +17,7 @@ const WalletConnectBtn = () => {
 
   return (
     <div
-      className="leading-loose rounded-lg bg-lime-400 text-sky-700 cursor-pointer w-56 text-center absolute top-5 right-5"
+      className="leading-loose rounded-lg bg-[#47B7FE] bg-opacity-20 text-[#47B7FE] cursor-pointer w-56 text-center absolute top-5 right-5"
       onClick={connectHandle}
     >
       {str}

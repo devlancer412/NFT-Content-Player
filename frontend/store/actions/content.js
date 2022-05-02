@@ -93,7 +93,7 @@ export const getNewContentId = () => async (dispatch) => {
 };
 
 export const uploadContentBlob =
-  (name, address, contentId, blobs) => async (dispatch) => {
+  (name, address, contentId, type, blobs) => async (dispatch) => {
     dispatch(setLoading(true));
 
     try {
@@ -106,7 +106,7 @@ export const uploadContentBlob =
 
       const result = await axios.post(
         `/api/content/upload/${contentId}/finish`,
-        stringify({ name, address })
+        stringify({ name, address, type })
       );
 
       console.log("Signature was got:", result.data.signature);

@@ -99,7 +99,7 @@ const BlobUploadManager = () => {
       );
     }
 
-    dispatch(uploadContentBlob(name, address, contentId, blobs));
+    dispatch(uploadContentBlob(name, address, contentId, type, blobs));
   };
 
   return (
@@ -115,7 +115,6 @@ const BlobUploadManager = () => {
           placeholder="Rick and Morty Season 1"
           className="w-2/3"
         />
-        <div className="w-full">{contentId}</div>
         <Select
           name="Type"
           value={ContentTypes.indexOf(type)}
@@ -125,7 +124,7 @@ const BlobUploadManager = () => {
           }
         />
       </div>
-      <div className="main flex flex-col w-full p-5 border-y-2 border-gray-700 h-full flex-1">
+      <div className="main flex flex-col w-full p-5 border-y-2 border-opacity-50 border-white h-full flex-1">
         {blobs.map((element, index) => {
           return (
             <div
@@ -177,7 +176,7 @@ const BlobUploadManager = () => {
                       icon={<FontAwesomeIcon icon={faTrash} />}
                       text=""
                       onClick={() => dispatch(removeBlob(index))}
-                      className="bg-white text-red-600 border-red-300 py-1 px-2 pl-4"
+                      className="bg-transparent text-red-600 border-red-300 py-1 px-2 pl-4"
                     />
                   </div>
                 </div>
@@ -205,7 +204,7 @@ const BlobUploadManager = () => {
             icon={<FontAwesomeIcon icon={faPlus} />}
             text="Add Blob"
             onClick={addBlobHandle}
-            className="border border-2 border-indigo-200 text-indigo-600 py-1 w-52"
+            className="border-0 bg-[#3E5E93] text-white py-1 w-52"
           />
         </div>
         <div className="float-right">
@@ -214,7 +213,7 @@ const BlobUploadManager = () => {
             icon={<FontAwesomeIcon icon={faUpload} />}
             text="Upload Content"
             onClick={uploadContentBlobHandle}
-            className="border border-2 border-green-200 text-green-600 py-1 w-52"
+            className="border-0 bg-[#3E5E93] text-white text-opacity-70 py-1 w-52"
           />
         </div>
       </div>

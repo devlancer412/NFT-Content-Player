@@ -5,7 +5,7 @@ const { Schema } = mongoose;
 const ContentSchema = new Schema({
   contentId: { type: String, required: true },
   name: { type: String },
-  address: { type: String },
+  type: { type: String },
   content: [
     {
       name: { type: String, required: true },

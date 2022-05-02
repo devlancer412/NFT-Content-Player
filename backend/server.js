@@ -9,7 +9,9 @@ const routes = require("./routes");
 global.__basedir = __dirname;
 
 // Database connection
-require("./config/database");
+(async () => {
+  await require("./config/database");
+})();
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));

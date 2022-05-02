@@ -26,7 +26,7 @@ const VideoDropZone = ({ fileHandle }) => {
     accept: "video/*",
   });
   return (
-    <div className="w-full bg-black h-full">
+    <div className="w-full bg-black bg-opacity-50 h-full">
       <div
         className="w-full h-full flex flex-col justify-center text-3xl"
         {...getRootProps()}

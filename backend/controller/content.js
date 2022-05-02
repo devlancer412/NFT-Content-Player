@@ -1,5 +1,4 @@
 const Content = require("../model").Content;
-const ObjectID = require("mongoose").Types.ObjectId;
 const contractApi = require("../utils/api.contract");
 
 exports.newContentId = async (req, res) => {
@@ -17,6 +16,7 @@ exports.newBlobUpload = async (req, res) => {
   const contentId = req.params.contentId;
   const { name, link, protected, type } = req.body;
 
+  console.log("Uploading new blob...");
   if (
     !name ||
     !link ||
@@ -108,7 +108,7 @@ exports.newBlobUpdate = async (req, res) => {
 
 exports.newContent = async (req, res) => {
   const { contentId } = req.params;
-  const { name, address } = req.body;
+  const { name, address, type } = req.body;
 
   if (!name || !address) {
     await Content.findOneAndDelete({ contentId: contentId });
@@ -127,8 +127,8 @@ exports.newContent = async (req, res) => {
       contentId
     );
 
-    contentRecord.address = address.toLowerCase();
     contentRecord.name = name;
+    contentRecord.type = type;
 
     await contentRecord.save();
     res.json({
@@ -141,25 +141,10 @@ exports.newContent = async (req, res) => {
   }
 };
 
-exports.index = async (req, res) => {
-  try {
-    const contents = await Content.find();
-    res.json(
-      contents.map((item) => {
-        return {
-          name: item.name,
-          content: item.content.filter((contentItem) => !contentItem.protected),
-        };
-      })
-    );
-  } catch (err) {
-    res.status(500).json(err);
-  }
-};
-
 exports.getContents = async (req, res) => {
   const { address } = req.params;
 
+  console.log("Get contents from address:", address);
   try {
     const contents = await Content.find();
 

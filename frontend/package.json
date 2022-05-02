@@ -30,7 +30,8 @@
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.4.1",
     "web3": "^1.7.3",
-    "web3modal": "^1.9.7"
+    "web3modal": "^1.9.7",
+    "yarn": "^1.22.18"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.4",

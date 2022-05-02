@@ -57,64 +57,64 @@ const NewContent = () => {
         </div>
         <div className="text-center mt-2 text-lg">Content Blobs Uploaded</div>
         <div className="flex flex-col">
-          <table className="min-w-full border text-start font-medium">
+          <table className="min-w-full rounded-xl text-start font-medium bg-[#3D4E80]">
             <tbody>
-              <tr className="border-b">
-                <td className="px-4 py-3 whitespace-nowrap text-gray-900 border-r">
+              <tr className="border border-0 border-b-2 border-white border-opacity-10">
+                <td className="px-4 py-3 whitespace-nowrap text-gray-40 bg-transparent rounded-xl ">
                   Content ID
                 </td>
-                <td className="text-gray-900 font-bold px-4 py-3 whitespace-nowrap border-r overflow-clip">
+                <td className="text-gray-40 font-bold px-4 py-3 whitespace-nowrap overflow-clip bg-transparent rounded-xl ">
                   {content.contentId}
                 </td>
               </tr>
-              <tr className="bg-white border-b">
-                <td className="px-4 py-3 whitespace-nowrap text-gray-900 border-r">
+              <tr className="border border-0 border-b-2 border-white border-opacity-10">
+                <td className="px-4 py-3 whitespace-nowrap text-gray-40">
                   Name
                 </td>
-                <td className="text-gray-900 px-4 py-3 whitespace-nowrap border-r overflow-clip">
+                <td className="text-gray-40 px-4 py-3 whitespace-nowrap overflow-clip">
                   {content.name}
                 </td>
               </tr>
-              <tr className="bg-white border-b">
-                <td className="px-4 py-3 whitespace-nowrap text-gray-900 border-r">
+              <tr className="border border-0 border-b-2 border-white border-opacity-10">
+                <td className="px-4 py-3 whitespace-nowrap text-gray-40">
                   Owner
                 </td>
-                <td className="text-gray-900 px-4 py-3 whitespace-nowrap border-r overflow-clip">
+                <td className="text-gray-40 px-4 py-3 whitespace-nowrap overflow-clip">
                   {contentOwner}
                 </td>
               </tr>
-              <tr className="bg-white border-b">
-                <td className="px-6 py-4 whitespace-nowrap text-gray-900 border-r">
+              <tr className="border border-0 border-b-2 border-white border-opacity-10">
+                <td className="px-6 py-4 whitespace-nowrap text-gray-40">
                   Type
                 </td>
-                <td className="text-gray-900 px-6 py-4 whitespace-nowrap border-r overflow-clip">
+                <td className="text-gray-40 px-6 py-4 whitespace-nowrap overflow-clip">
                   {content.type}
                 </td>
               </tr>
-              <tr className="bg-white border-b">
-                <td className="px-4 py-3 whitespace-nowrap text-gray-900 border-r">
+              <tr className="">
+                <td className="px-4 py-3 whitespace-nowrap text-gray-40">
                   Contents
                 </td>
-                <td className="text-gray-900 px-4 py-3 whitespace-nowrap border-r overflow-clip">
+                <td className="text-gray-40 px-4 py-3 whitespace-nowrap overflow-clip">
                   Private: {privateBlobNumber}; Public: {publicBlobNumber}
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
-        <div className="flex flex-row justify-between w-full mt-2">
+        <div className="flex flex-row justify-around w-full mt-2">
           <Link href="/content">
             <Button
               size="base"
               text="Dashboard"
-              className="bg-indigo-600 text-white py-1 w-5/12"
+              className="border-0 bg-[#3E5E93] text-white py-1 w-5/12 text-2xl"
             />
           </Link>
           <Link href="/content/new/uploadblob">
             <Button
               size="base"
-              text="Upload"
-              className="bg-white text-indigo-900 border-2 rounded-sm border-indigo-400 py-1 w-5/12"
+              text="Upload New"
+              className="border-0 bg-[#47B7FE] text-[#DCF1FF] rounded-sm py-1 w-5/12 text-2xl"
             />
           </Link>
         </div>

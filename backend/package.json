@@ -17,6 +17,7 @@
     "express": "^4.17.3",
     "mongoose": "^6.3.0",
     "multer": "^1.4.4",
-    "websocket": "^1.0.34"
+    "websocket": "^1.0.34",
+    "yarn": "^1.22.18"
   }
 }

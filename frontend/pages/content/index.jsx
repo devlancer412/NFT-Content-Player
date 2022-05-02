@@ -61,6 +61,10 @@ const ContentManager = () => {
   const transferDistributionHandle = async (contentId, toAddress) => {
     console.log({ contentId, toAddress });
 
+    if (!toAddress) {
+      return dispatch(setError("Please insert a wallet address"));
+    }
+
     const result = await dispatch(
       transferDistribution(contentId, address, toAddress)
     );
@@ -73,6 +77,10 @@ const ContentManager = () => {
 
   const mintNFTHandle = async (contentId, toAddress) => {
     console.log({ contentId, toAddress });
+
+    if (!toAddress) {
+      return dispatch(setError("Please insert a wallet address"));
+    }
 
     const result = await dispatch(
       mintNFTForContent(contentId, address, toAddress)
@@ -105,7 +113,7 @@ const ContentManager = () => {
       <div className="header">
         <h1 className="text-3xl font-bold leading-loose">Content Manager</h1>
       </div>
-      <div className="main flex flex-col w-full p-5 border-y-2 border-gray-700 h-full flex-1">
+      <div className="main flex flex-col w-full p-5 border-y-2 border-opacity-50 border-white h-full flex-1">
         {contents.map((element, index) => {
           return (
             <div
@@ -117,8 +125,8 @@ const ContentManager = () => {
                   <div className="content-name w-full text-xl">
                     {element.name}
                   </div>
-                  <div className="content-id w-full text-base">
-                    Content Id: {element.contentId}
+                  <div className="content-id w-full text-base break-words">
+                    {element.contentId}
                   </div>
                 </div>
                 <div className="content-edit flex flex-row justify-between font-semibold">
@@ -128,7 +136,7 @@ const ContentManager = () => {
                         size="base"
                         icon={<FontAwesomeIcon icon={faList} />}
                         text="Contents"
-                        className="border border-2 border-indigo-200 text-indigo-600 py-1 w-40 mr-3"
+                        className="border-0 bg-[#3E5E93] text-[#46b2f7] py-1 w-40 mr-3"
                       />
                     </Link>
 
@@ -138,7 +146,7 @@ const ContentManager = () => {
                         icon={<FontAwesomeIcon icon={faExternalLinkAlt} />}
                         text="Transfer"
                         onClick={() => transferModal(element)}
-                        className="border border-2 border-indigo-200 text-indigo-600 py-1 w-40"
+                        className="border-0 bg-[#3E5E93] text-[#46b2f7]  py-1 w-40"
                       />
                     ) : null}
                   </div>
@@ -149,7 +157,7 @@ const ContentManager = () => {
                         icon={<FontAwesomeIcon icon={faHammer} />}
                         text="Mint"
                         onClick={() => mintModal(element)}
-                        className="bg-indigo-600 text-white py-1 w-40"
+                        className="border-0 bg-[#47B7FE] text-[#DCF1FF] py-1 w-40"
                       />
                     ) : null}
                   </div>
@@ -169,7 +177,7 @@ const ContentManager = () => {
               size="base"
               icon={<FontAwesomeIcon icon={faPlus} />}
               text="Add Content"
-              className="border border-2 border-indigo-200 text-indigo-600 py-1 w-52"
+              className="border-0 bg-[#3E5E93] text-white py-1 w-52"
             />
           </Link>
         </div>
