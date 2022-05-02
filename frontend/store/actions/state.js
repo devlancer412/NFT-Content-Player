@@ -7,8 +7,8 @@ export const setLoading = (flag) => (dispatch) => {
   });
 };
 
-export const setError = (err) => (dispatch) => {
-  dispatch({
+export const setError = (err) => async (dispatch) => {
+  await dispatch({
     type: SET_ERROR,
     payload: "",
   });

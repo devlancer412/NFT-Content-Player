@@ -38,7 +38,7 @@ const ImageDropZone = ({ fileHandle }) => {
             alt="Drop files here"
           />
         ) : (
-          <div className="flex flex-col justify-center align-middle text-center text-gray-800">
+          <div className="flex flex-col justify-center align-middle text-center text-gray-800 h-40">
             <FontAwesomeIcon icon={faImage} />
           </div>
         )}

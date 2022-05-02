@@ -128,10 +128,10 @@ const BlobUploadManager = () => {
         {blobs.map((element, index) => {
           return (
             <div
-              className="content-view flex flex-row w-full mb-10 justify-between"
+              className="content-view flex flex-col md:flex-row w-full mb-10 justify-between"
               key={index}
             >
-              <div className="content-detail w-96 flex flex-col justify-between pr-5">
+              <div className="content-detail w-full md:w-96 flex flex-col justify-between pr-5">
                 <div className="content-header flex flex-col w-full">
                   <div className="content-name w-full text-xl">
                     <Input
@@ -181,7 +181,7 @@ const BlobUploadManager = () => {
                   </div>
                 </div>
               </div>
-              <div className="content-preview w-1/3">
+              <div className="content-preview w-full mt-2 md:mt-0 md:w-1/3">
                 {element.type === "Image" ? (
                   <ImageDropZone
                     fileHandle={(link) => dispatch(updateBlobLink(index, link))}
@@ -197,23 +197,23 @@ const BlobUploadManager = () => {
           );
         })}
       </div>
-      <div className="footer p-5 w-full">
-        <div className="float-left">
+      <div className="footer py-5 sm:p-5 w-full">
+        <div className="float-left w-full sm:w-auto">
           <Button
             size="base"
             icon={<FontAwesomeIcon icon={faPlus} />}
             text="Add Blob"
             onClick={addBlobHandle}
-            className="border-0 bg-[#3E5E93] text-white py-1 w-52"
+            className="border-0 bg-[#3E5E93] text-white py-1 w-full sm:w-48"
           />
         </div>
-        <div className="float-right">
+        <div className="float-right w-full sm:w-auto">
           <Button
             size="base"
             icon={<FontAwesomeIcon icon={faUpload} />}
             text="Upload Content"
             onClick={uploadContentBlobHandle}
-            className="border-0 bg-[#3E5E93] text-white text-opacity-70 py-1 w-52"
+            className="border-0 bg-[#3E5E93] text-white text-opacity-70 py-1 w-full sm:w-48"
           />
         </div>
       </div>

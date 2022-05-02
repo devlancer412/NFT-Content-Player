@@ -121,7 +121,7 @@ const ContentManager = () => {
               key={index}
             >
               <div className="content-detail flex justify-between w-full lg:w-3/4 lg:pr-5 flex-col sm:flex-row md:flex-row  lg:flex-col">
-                <div className="content-header flex flex-1 flex-col w-auto lg:w-full">
+                <div className="content-header flex flex-1 flex-col w-auto lg:w-full sm:mr-2">
                   <div className="content-name w-full text-xl font-semibold">
                     {element.name}
                   </div>

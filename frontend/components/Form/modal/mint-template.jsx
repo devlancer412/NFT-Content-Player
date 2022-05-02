@@ -11,7 +11,7 @@ const MintModalContent = ({ content, handleSubmit }) => {
   return (
     <div className="w-full h-[350px] flex flex-col justify-between text-left">
       <div className="header w-full flex flex-col">
-        <h1 className="w-full text-3xl text-gray-50">{content.name}</h1>
+        <h1 className="w-full text-3xl font-bold text-black">{content.name}</h1>
         <span className="w-full break-words mt-3">{content.contentId}</span>
       </div>
       <div className="body w-full flex-1 flex flex-col justify-center pb-5">
