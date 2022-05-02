@@ -117,26 +117,26 @@ const ContentManager = () => {
         {contents.map((element, index) => {
           return (
             <div
-              className="content-view flex flex-row w-full mb-10"
+              className="content-view flex lg:flex-row w-full mb-10 flex-col"
               key={index}
             >
-              <div className="content-detail w-3/4 flex flex-col justify-between pr-5">
-                <div className="content-header flex flex-col w-full">
-                  <div className="content-name w-full text-xl">
+              <div className="content-detail flex justify-between w-full lg:w-3/4 lg:pr-5 flex-col sm:flex-row md:flex-row  lg:flex-col">
+                <div className="content-header flex flex-1 flex-col w-auto lg:w-full">
+                  <div className="content-name w-full text-xl font-semibold">
                     {element.name}
                   </div>
-                  <div className="content-id w-full text-base break-words">
+                  <div className="content-id w-full text-base break-all">
                     {element.contentId}
                   </div>
                 </div>
-                <div className="content-edit flex flex-row justify-between font-semibold">
-                  <div className="content-ct flex flex-row justify-start">
+                <div className="content-edit flex justify-between font-semibold flex-col lg:flex-row">
+                  <div className="content-ct flex justify-start flex-col lg:flex-row align-middle">
                     <Link href={`/content/${element.contentId}`}>
                       <Button
                         size="base"
                         icon={<FontAwesomeIcon icon={faList} />}
                         text="Contents"
-                        className="bg-white border rounded-md border-opacity-50 border-[1px] border-black text-black py-1 w-40 mr-3"
+                        className="bg-white border rounded-md border-opacity-50 border-[1px] border-black text-black py-1 w-full sm:w-40 lg:mr-3 mr-0 mb-2"
                       />
                     </Link>
 
@@ -146,7 +146,7 @@ const ContentManager = () => {
                         icon={<FontAwesomeIcon icon={faExternalLinkAlt} />}
                         text="Transfer"
                         onClick={() => transferModal(element)}
-                        className="bg-white border rounded-md border-opacity-50 border-[1px] border-black text-black  py-1 w-40"
+                        className="bg-white border rounded-md border-opacity-50 border-[1px] border-black text-black  py-1 mr-0 mb-2 w-full sm:w-40"
                       />
                     ) : null}
                   </div>
@@ -157,13 +157,13 @@ const ContentManager = () => {
                         icon={<FontAwesomeIcon icon={faHammer} />}
                         text="Mint"
                         onClick={() => mintModal(element)}
-                        className="border-0 bg-[#0d99ff] rounded-md text-white py-1 w-40"
+                        className="border-0 bg-[#0d99ff] rounded-md text-white py-1 br-0 mb-2 w-full sm:w-40"
                       />
                     ) : null}
                   </div>
                 </div>
               </div>
-              <div className="content-preview w-1/4">
+              <div className="content-preview lg:w-1/4 w-full mt-5 lg:mt-0">
                 <div className="w-full h-40 bg-gray-500"></div>
               </div>
             </div>
@@ -171,13 +171,13 @@ const ContentManager = () => {
         })}
       </div>
       <div className="footer p-5 w-full">
-        <div className="float-left">
+        <div className="float-left w-full sm:w-auto">
           <Link href="/content/new/uploadblob">
             <Button
               size="base"
               icon={<FontAwesomeIcon icon={faPlus} />}
               text="Add Content"
-              className="border-0 bg-[#3E5E93] text-white py-1 w-52"
+              className="border-0 bg-[#3E5E93] text-white py-1 w-full sm:w-52"
             />
           </Link>
         </div>
