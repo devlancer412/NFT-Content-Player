@@ -124,7 +124,7 @@ const BlobUploadManager = () => {
           }
         />
       </div>
-      <div className="main flex flex-col w-full p-5 border-y-2 border-opacity-50 border-white h-full flex-1">
+      <div className="main flex flex-col w-full p-5 border-y-2 border-[#e6e6e6]  h-full flex-1">
         {blobs.map((element, index) => {
           return (
             <div

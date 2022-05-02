@@ -12,7 +12,7 @@ export default function Home() {
           Welcome!
         </h1>
       </div>
-      <div className="main flex flex-col w-full p-5 border-y-2 border-opacity-50 border-white h-full flex-1"></div>
+      <div className="main flex flex-col w-full p-5 border-y-2 border-[#e6e6e6] h-full flex-1"></div>
       <div className="footer p-5 w-full">
         <div className="float-left">
           <Link href="/content/">

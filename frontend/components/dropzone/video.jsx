@@ -26,7 +26,7 @@ const VideoDropZone = ({ fileHandle }) => {
     accept: "video/*",
   });
   return (
-    <div className="w-full bg-black bg-opacity-50 h-full">
+    <div className="w-full bg-gray-200 h-full">
       <div
         className="w-full h-full flex flex-col justify-center text-3xl"
         {...getRootProps()}
@@ -35,7 +35,7 @@ const VideoDropZone = ({ fileHandle }) => {
         {src.preview ? (
           <ReactPlayer url={src.preview} controls width="100%" height="100%" />
         ) : (
-          <div className="flex flex-col justify-center align-middle text-center text-gray-500">
+          <div className="flex flex-col justify-center align-middle text-center text-gray-800">
             <FontAwesomeIcon icon={faVideo} />
           </div>
         )}

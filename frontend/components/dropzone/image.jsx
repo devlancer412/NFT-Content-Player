@@ -25,7 +25,7 @@ const ImageDropZone = ({ fileHandle }) => {
     accept: "image/*",
   });
   return (
-    <div className="w-full bg-black bg-opacity-50 h-full">
+    <div className="w-full bg-gray-400 h-full">
       <div
         className="w-full h-full flex flex-col justify-center text-3xl"
         {...getRootProps()}
@@ -38,7 +38,7 @@ const ImageDropZone = ({ fileHandle }) => {
             alt="Drop files here"
           />
         ) : (
-          <div className="flex flex-col justify-center align-middle text-center text-gray-500">
+          <div className="flex flex-col justify-center align-middle text-center text-gray-800">
             <FontAwesomeIcon icon={faImage} />
           </div>
         )}

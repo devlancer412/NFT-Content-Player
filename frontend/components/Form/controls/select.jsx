@@ -10,14 +10,14 @@ const Select = ({ name, value, items, handleChange }) => {
 
   return (
     <label className="block">
-      <span className="text-white">{name}</span>
+      <span className="font-semibold">{name}</span>
       <div className=" relative ">
         <div className="w-64">
           <div className="mt-1 relative">
             <button
               type="button"
               onClick={toggleExpand}
-              className="relative flex-1 appearance-none w-full py-2 px-0 bg-[#182753] bg-opacity-50 text-white placeholder-gray-400 shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+              className="relative flex-1 appearance-none w-full py-2 px-0 placeholder-gray-400 shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
             >
               <span className="flex items-center">
                 <span className="ml-3 block truncate">{items[selected]}</span>
@@ -39,13 +39,13 @@ const Select = ({ name, value, items, handleChange }) => {
               </span>
             </button>
             {expanded ? (
-              <div className="absolute mt-1 w-full z-10 rounded-md  bg-[#182753] text-white shadow-lg">
+              <div className="absolute mt-1 w-full z-10 rounded-md shadow-lg">
                 <ul
                   tabIndex="-1"
                   role="listbox"
                   aria-labelledby="listbox-label"
                   aria-activedescendant="listbox-item-3"
-                  className="max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
+                  className="max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 bg-white overflow-auto focus:outline-none sm:text-sm"
                 >
                   {items.map((item, index) => {
                     return (
@@ -54,7 +54,7 @@ const Select = ({ name, value, items, handleChange }) => {
                         role="option"
                         key={index}
                         onClick={() => handleChange(index)}
-                        className="text-gray-100 cursor-default select-none hover:bg-indigo-500 hover:text-white relative py-2 pl-3 pr-9"
+                        className="text-gray-900 cursor-default select-none hover:bg-indigo-500 hover:text-white relative py-2 pl-3 pr-9"
                       >
                         <div className="flex items-center">
                           <span className="ml-3 block font-normal truncate">

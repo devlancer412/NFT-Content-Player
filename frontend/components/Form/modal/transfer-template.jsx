@@ -33,7 +33,7 @@ const TransferModalContent = ({ content, handleSubmit }) => {
           icon={<FontAwesomeIcon icon={faExternalLinkAlt} />}
           text="Transfer"
           onClick={() => handleSubmit(content.contentId, destAddress)}
-          className="bg-indigo-600 text-white py-1 w-40"
+          className="border-0 bg-[#0d99ff] text-white py-1 w-40"
         />
       </div>
     </div>

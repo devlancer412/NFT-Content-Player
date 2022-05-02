@@ -21,7 +21,7 @@ const Modal = ({ show, onClose, children }) => {
 
   const modalContent = show ? (
     <div
-      className="fixed t-0 l-0 w-screen h-screen flex justify-center items-center bg-gray-500 bg-opacity-40"
+      className="fixed t-0 l-0 w-screen h-screen flex justify-center items-center bg-black bg-opacity-40"
       onClick={handleCloseClick}
     >
       <div

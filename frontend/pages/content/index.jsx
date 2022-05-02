@@ -113,7 +113,7 @@ const ContentManager = () => {
       <div className="header">
         <h1 className="text-3xl font-bold leading-loose">Content Manager</h1>
       </div>
-      <div className="main flex flex-col w-full p-5 border-y-2 border-opacity-50 border-white h-full flex-1">
+      <div className="main flex flex-col w-full p-5 border-y-2 border-[#e6e6e6] h-full flex-1">
         {contents.map((element, index) => {
           return (
             <div
@@ -136,7 +136,7 @@ const ContentManager = () => {
                         size="base"
                         icon={<FontAwesomeIcon icon={faList} />}
                         text="Contents"
-                        className="border-0 bg-[#3E5E93] text-[#46b2f7] py-1 w-40 mr-3"
+                        className="bg-white border rounded-md border-opacity-50 border-[1px] border-black text-black py-1 w-40 mr-3"
                       />
                     </Link>
 
@@ -146,7 +146,7 @@ const ContentManager = () => {
                         icon={<FontAwesomeIcon icon={faExternalLinkAlt} />}
                         text="Transfer"
                         onClick={() => transferModal(element)}
-                        className="border-0 bg-[#3E5E93] text-[#46b2f7]  py-1 w-40"
+                        className="bg-white border rounded-md border-opacity-50 border-[1px] border-black text-black  py-1 w-40"
                       />
                     ) : null}
                   </div>
@@ -157,7 +157,7 @@ const ContentManager = () => {
                         icon={<FontAwesomeIcon icon={faHammer} />}
                         text="Mint"
                         onClick={() => mintModal(element)}
-                        className="border-0 bg-[#47B7FE] text-[#DCF1FF] py-1 w-40"
+                        className="border-0 bg-[#0d99ff] rounded-md text-white py-1 w-40"
                       />
                     ) : null}
                   </div>

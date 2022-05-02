@@ -5,7 +5,11 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faDashboard,
+  faUpload,
+} from "@fortawesome/free-solid-svg-icons";
 
 import Button from "../../../components/button/Button";
 import { setFinished } from "../../../store/actions/content";
@@ -45,7 +49,7 @@ const NewContent = () => {
   }, [content]);
 
   return (
-    <main className="flex flex-col w-full flex-1 px-5">
+    <main className="flex flex-col w-full flex-1 px-5 container">
       <div className="header">
         <h1 className="text-3xl font-bold leading-loose font-bold">
           Blob Upload - {content.name}
@@ -57,9 +61,9 @@ const NewContent = () => {
         </div>
         <div className="text-center mt-2 text-lg">Content Blobs Uploaded</div>
         <div className="flex flex-col">
-          <table className="min-w-full rounded-xl text-start font-medium bg-[#3D4E80]">
+          <table className="min-w-full text-start font-medium bg-transparent">
             <tbody>
-              <tr className="border border-0 border-b-2 border-white border-opacity-10">
+              <tr className="border border-0 border-b-2 border-gray-300">
                 <td className="px-4 py-3 whitespace-nowrap text-gray-40 bg-transparent rounded-xl ">
                   Content ID
                 </td>
@@ -67,7 +71,7 @@ const NewContent = () => {
                   {content.contentId}
                 </td>
               </tr>
-              <tr className="border border-0 border-b-2 border-white border-opacity-10">
+              <tr className="border border-0 border-b-2 border-gray-300">
                 <td className="px-4 py-3 whitespace-nowrap text-gray-40">
                   Name
                 </td>
@@ -75,7 +79,7 @@ const NewContent = () => {
                   {content.name}
                 </td>
               </tr>
-              <tr className="border border-0 border-b-2 border-white border-opacity-10">
+              <tr className="border border-0 border-b-2 border-gray-300">
                 <td className="px-4 py-3 whitespace-nowrap text-gray-40">
                   Owner
                 </td>
@@ -83,15 +87,15 @@ const NewContent = () => {
                   {contentOwner}
                 </td>
               </tr>
-              <tr className="border border-0 border-b-2 border-white border-opacity-10">
-                <td className="px-6 py-4 whitespace-nowrap text-gray-40">
+              <tr className="border border-0 border-b-2 border-gray-300">
+                <td className="px-4 py-3 whitespace-nowrap text-gray-40">
                   Type
                 </td>
                 <td className="text-gray-40 px-6 py-4 whitespace-nowrap overflow-clip">
                   {content.type}
                 </td>
               </tr>
-              <tr className="">
+              <tr className="border border-0 border-b-2 border-gray-300">
                 <td className="px-4 py-3 whitespace-nowrap text-gray-40">
                   Contents
                 </td>
@@ -107,6 +111,7 @@ const NewContent = () => {
             <Button
               size="base"
               text="Dashboard"
+              icon={<FontAwesomeIcon icon={faDashboard} />}
               className="border-0 bg-[#3E5E93] text-white py-1 w-5/12 text-2xl"
             />
           </Link>
@@ -114,7 +119,8 @@ const NewContent = () => {
             <Button
               size="base"
               text="Upload New"
-              className="border-0 bg-[#47B7FE] text-[#DCF1FF] rounded-sm py-1 w-5/12 text-2xl"
+              icon={<FontAwesomeIcon icon={faUpload} />}
+              className="border-0 bg-[#0d99ff] text-[#DCF1FF] rounded-sm py-1 w-5/12 text-2xl"
             />
           </Link>
         </div>
