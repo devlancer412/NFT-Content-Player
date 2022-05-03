@@ -25,23 +25,25 @@ const ImageDropZone = ({ fileHandle }) => {
     accept: "image/*",
   });
   return (
-    <div className="w-full bg-gray-400 h-full">
-      <div
-        className="w-full h-full flex flex-col justify-center text-3xl"
-        {...getRootProps()}
-      >
-        <input {...getInputProps()} />
-        {src.preview ? (
-          <img
-            className="w-full text-white min-h-fit"
-            src={src.preview}
-            alt="Drop files here"
-          />
-        ) : (
-          <div className="flex flex-col justify-center align-middle text-center text-gray-800 h-40">
-            <FontAwesomeIcon icon={faImage} />
-          </div>
-        )}
+    <div className="p-[2px] rounded-lg border-solid border-slate-700 border-2 group">
+      <div className="w-full bg-gray-600 rounded-lg h-full">
+        <div
+          className="w-full h-full flex flex-col justify-center text-3xl"
+          {...getRootProps()}
+        >
+          <input {...getInputProps()} />
+          {src.preview ? (
+            <img
+              className="w-full text-white min-h-fit rounded-lg"
+              src={src.preview}
+              alt="Drop files here"
+            />
+          ) : (
+            <div className="flex flex-col justify-center align-middle text-center text-white h-40">
+              <FontAwesomeIcon icon={faImage} />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

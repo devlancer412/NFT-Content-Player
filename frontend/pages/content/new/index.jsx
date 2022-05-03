@@ -49,13 +49,17 @@ const NewContent = () => {
   }, [content]);
 
   return (
-    <main className="flex flex-col w-full flex-1 px-5 container">
-      <div className="header">
-        <h1 className="text-3xl font-bold leading-loose font-bold">
-          Blob Upload - {content.name}
+    <main className="flex flex-col w-full flex-1">
+      <div className="header top-0 backdrop-blur-sm bg-opacity-30 bg-indigo-300 w-full z-10 flex items-center pl-5">
+        <span class="flex h-3 w-3">
+          <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-sky-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+        </span>
+        <h1 className="text-3xl font-bold leading-loose px-5">
+          Upload Blob - {content.name}
         </h1>
       </div>
-      <div className="main flex flex-col w-full p-5 h-full flex-1 justify-center py-auto">
+      <div className="main flex flex-col m-auto p-5 h-full flex-1 justify-center py-auto container items-center">
         <div className="w-32 h-32 rounded-full bg-green-500 text-gray-700 text-3xl flex flex-col justify-center text-center mx-auto font-bold">
           <FontAwesomeIcon icon={faCheck} />
         </div>
@@ -63,7 +67,7 @@ const NewContent = () => {
         <div className="flex flex-col">
           <table className="min-w-full text-start font-medium bg-transparent">
             <tbody>
-              <tr className="border border-0 border-b-2 border-gray-300">
+              <tr className="border border-b-2 border-gray-300">
                 <td className="px-4 py-3 whitespace-nowrap text-gray-40 bg-transparent rounded-xl ">
                   Content ID
                 </td>
@@ -71,7 +75,7 @@ const NewContent = () => {
                   {content.contentId}
                 </td>
               </tr>
-              <tr className="border border-0 border-b-2 border-gray-300">
+              <tr className="border  border-b-2 border-gray-300">
                 <td className="px-4 py-3 whitespace-nowrap text-gray-40">
                   Name
                 </td>
@@ -79,7 +83,7 @@ const NewContent = () => {
                   {content.name}
                 </td>
               </tr>
-              <tr className="border border-0 border-b-2 border-gray-300">
+              <tr className="border  border-b-2 border-gray-300">
                 <td className="px-4 py-3 whitespace-nowrap text-gray-40">
                   Owner
                 </td>
@@ -87,7 +91,7 @@ const NewContent = () => {
                   {contentOwner}
                 </td>
               </tr>
-              <tr className="border border-0 border-b-2 border-gray-300">
+              <tr className="border  border-b-2 border-gray-300">
                 <td className="px-4 py-3 whitespace-nowrap text-gray-40">
                   Type
                 </td>
@@ -95,7 +99,7 @@ const NewContent = () => {
                   {content.type}
                 </td>
               </tr>
-              <tr className="border border-0 border-b-2 border-gray-300">
+              <tr className="border  border-b-2 border-gray-300">
                 <td className="px-4 py-3 whitespace-nowrap text-gray-40">
                   Contents
                 </td>
@@ -106,7 +110,7 @@ const NewContent = () => {
             </tbody>
           </table>
         </div>
-        <div className="flex flex-row justify-around w-full mt-2">
+        <div className="flex flex-row justify-around w-full mt-2 container">
           <Link href="/content">
             <Button
               size="base"

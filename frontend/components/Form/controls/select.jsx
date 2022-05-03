@@ -10,14 +10,14 @@ const Select = ({ name, value, items, handleChange }) => {
 
   return (
     <label className="block">
-      <span className="font-semibold">{name}</span>
+      <span className="font-semibold text-slate-100">{name}</span>
       <div className=" relative ">
         <div className="w-64">
           <div className="mt-1 relative">
             <button
               type="button"
               onClick={toggleExpand}
-              className="relative flex-1 appearance-none w-full py-2 px-0 placeholder-gray-400 shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+              className="relative flex-1 bg-white bg-opacity-30 backdrop-blur-sm appearance-none w-full py-2 px-0 placeholder-gray-400 shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
             >
               <span className="flex items-center">
                 <span className="ml-3 block truncate">{items[selected]}</span>
@@ -45,7 +45,7 @@ const Select = ({ name, value, items, handleChange }) => {
                   role="listbox"
                   aria-labelledby="listbox-label"
                   aria-activedescendant="listbox-item-3"
-                  className="max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 bg-white overflow-auto focus:outline-none sm:text-sm"
+                  className="max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 bg-white overflow-auto focus:outline-none sm:text-sm bg-opacity-60 backdrop-blur-sm"
                 >
                   {items.map((item, index) => {
                     return (

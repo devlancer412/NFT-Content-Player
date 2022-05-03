@@ -103,9 +103,13 @@ const BlobUploadManager = () => {
   };
 
   return (
-    <main className="flex flex-col w-full flex-1 px-5">
-      <div className="header">
-        <h1 className="text-3xl font-bold leading-loose">Blob Upload</h1>
+    <main className="flex flex-col w-full flex-1">
+      <div className="header top-0 backdrop-blur-sm bg-opacity-30 bg-indigo-300 w-full z-10 flex items-center pl-5">
+        <span class="flex h-3 w-3">
+          <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-sky-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+        </span>
+        <h1 className="text-3xl font-bold leading-loose px-5">Upload Blob</h1>
       </div>
       <div className="Title p-5">
         <Input
@@ -124,16 +128,16 @@ const BlobUploadManager = () => {
           }
         />
       </div>
-      <div className="main flex flex-col w-full p-5 border-y-2 border-[#e6e6e6]  h-full flex-1">
+      <div className="main flex flex-col w-full border-y-2 border-[#e6e6e6] h-full flex-1">
         {blobs.map((element, index) => {
           return (
             <div
-              className="content-view flex flex-col md:flex-row w-full mb-10 justify-between"
+              className="border-b-[2px] border-b-[#ffffff55] last:border-none px-5 py-8 content-view flex flex-col md:flex-row w-full justify-between"
               key={index}
             >
               <div className="content-detail w-full md:w-96 flex flex-col justify-between pr-5">
                 <div className="content-header flex flex-col w-full">
-                  <div className="content-name w-full text-xl">
+                  <div className="content-name w-full">
                     <Input
                       name="Name"
                       value={element.name}
@@ -176,7 +180,7 @@ const BlobUploadManager = () => {
                       icon={<FontAwesomeIcon icon={faTrash} />}
                       text=""
                       onClick={() => dispatch(removeBlob(index))}
-                      className="bg-transparent text-red-600 border-red-300 py-1 px-2 pl-4"
+                      className="bg-transparent text-rose-800 border-red-300 py-1 px-2 pl-4"
                     />
                   </div>
                 </div>
@@ -197,7 +201,7 @@ const BlobUploadManager = () => {
           );
         })}
       </div>
-      <div className="footer py-5 sm:p-5 w-full">
+      <div className="footer p-5 w-full bg-indigo-300 bg-opacity-60 backdrop-blur-sm">
         <div className="float-left w-full sm:w-auto">
           <Button
             size="base"

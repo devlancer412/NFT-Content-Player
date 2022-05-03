@@ -111,7 +111,7 @@ const ContentManager = () => {
 
   return (
     <main className="flex flex-col w-full flex-1">
-      <div className="header fixed top-0 backdrop-blur-sm bg-opacity-30 bg-indigo-300 w-full z-10 flex items-center pl-5">
+      <div className="header top-0 backdrop-blur-sm bg-opacity-30 bg-indigo-300 w-full z-10 flex items-center pl-5">
         <span class="flex h-3 w-3">
           <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-sky-400 opacity-75"></span>
           <span class="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
@@ -120,7 +120,7 @@ const ContentManager = () => {
           Content Manager
         </h1>
       </div>
-      <div className="main mt-[60px] flex flex-col w-full border-y-2 border-[#e6e6e6] h-full flex-1 mb-[80px]">
+      <div className="main flex flex-col w-full border-y-2 border-[#e6e6e6] h-full flex-1">
         {contents.map((element, index) => {
           return (
             <Transition
@@ -190,7 +190,7 @@ const ContentManager = () => {
           );
         })}
       </div>
-      <div className="footer p-5 w-full fixed bottom-0 bg-indigo-300 bg-opacity-60 backdrop-blur-sm">
+      <div className="footer p-5 w-full bg-indigo-300 bg-opacity-60 backdrop-blur-sm">
         <div className="float-left w-full sm:w-auto">
           <Link href="/content/new/uploadblob">
             <Button
