@@ -10,7 +10,7 @@ const Button = ({
   full = false,
   ...newProps
 }) => {
-  let finalClass = `${className} inline-block rounded-sm font-medium border border-solid cursor-pointer text-center transition-colors duration-200`;
+  let finalClass = `${className} relative inline-block font-medium cursor-pointer text-center transition-colors duration-200`;
   if (size === "xs") finalClass += " text-xs";
   else if (size === "sm") finalClass += " text-sm";
   else if (size === "base") finalClass += " text-base";
@@ -23,8 +23,10 @@ const Button = ({
     if (iconPosition === "left")
       content = (
         <>
-          {React.cloneElement(icon, { className: "mr-2" })}
-          {text}
+          {React.cloneElement(icon, {
+            className: "mr-2 absolute top-1/2 -translate-y-1/2 left-[20px]",
+          })}
+          <span className="pl-[50px] pr-[20px]">{text}</span>
         </>
       );
     else if (iconPosition === "right")

@@ -17,15 +17,16 @@ const Layout = ({ children }) => {
   }, [error]);
 
   return (
-    <>
+    <div className="bg-[url('/background.jpg')] bg-no-repeat bg-cover bg-opacity-20">
       <Meta />
       {isLoading ? <Loading /> : null}
-      <div className="flex flex-col items-center justify-center min-h-screen text-black">
+      <div className="flex flex-col items-center justify-center min-h-screen text-black bg-white bg-opacity-30 backdrop-blur-[4px]">
         {children}
       </div>
+
       <ToastContainer />
       <WalletConnectBtn />
-    </>
+    </div>
   );
 };
 

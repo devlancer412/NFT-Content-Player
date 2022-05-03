@@ -25,13 +25,13 @@ const WalletConnectBtn = () => {
   return (
     <>
       <div
-        className="leading-loose rounded-lg bg-[#FF24BD] bg-opacity-80 text-white cursor-pointer w-44 text-center absolute top-5 right-5 hover:animate-bounce hidden sm:block md:w-56"
+        className="leading-loose rounded-lg bg-red-400 hover:bg-red-500 bg-opacity-80 text-white cursor-pointer w-32 text-center fixed top-[15px] right-5 hidden sm:block md:w-44 z-20"
         onClick={connectHandle}
       >
         {str}
       </div>
       <div
-        className="leading-loose rounded-lg bg-[#FF24BD] bg-opacity-80 text-white cursor-pointer text-center absolute top-5 right-5 hover:animate-bounce block sm:hidden px-2"
+        className="leading-loose rounded-lg bg-[#FF24BD] bg-opacity-80 text-white cursor-pointer text-center fixed top-5 right-5 hover:animate-bounce block sm:hidden px-2 z-20"
         onClick={connectHandle}
       >
         {smallStr}
