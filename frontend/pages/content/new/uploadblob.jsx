@@ -25,7 +25,7 @@ import ImageDropZone from "../../../components/dropzone/image";
 import VideoDropZone from "../../../components/dropzone/video";
 import {
   getNewContentId,
-  uploadContentBlob,
+  uploadContentBlobs,
 } from "../../../store/actions/content";
 
 const BlobTypes = ["Video", "Image"];
@@ -99,7 +99,7 @@ const BlobUploadManager = () => {
       );
     }
 
-    dispatch(uploadContentBlob(name, address, contentId, type, blobs));
+    dispatch(uploadContentBlobs(name, address, contentId, type, blobs));
   };
 
   return (
@@ -188,11 +188,13 @@ const BlobUploadManager = () => {
               <div className="content-preview w-full mt-2 md:mt-0 md:w-1/3">
                 {element.type === "Image" ? (
                   <ImageDropZone
+                    file={element.link}
                     fileHandle={(link) => dispatch(updateBlobLink(index, link))}
                   />
                 ) : null}
                 {element.type === "Video" ? (
                   <VideoDropZone
+                    file={element.link}
                     fileHandle={(link) => dispatch(updateBlobLink(index, link))}
                   />
                 ) : null}

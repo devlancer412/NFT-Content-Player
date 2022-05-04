@@ -18,6 +18,7 @@ import {
 
 import { setError, setLoading } from "./state";
 import { newContentCreate } from "./web3-api";
+import { blobToFile, readFileAsync, url2blob } from "../../services/read-file";
 
 export const setContentName = (name) => (dispatch) => {
   return dispatch({
@@ -79,7 +80,7 @@ export const getNewContentId = () => async (dispatch) => {
   try {
     const result = await axios.get("/api/content/upload/new");
 
-    dispatch(setContentId(result.data));
+    dispatch(setContentId(result.data.content_id));
   } catch (err) {
     if (!err.response) {
       dispatch(setError("Can't reache to server"));
@@ -92,21 +93,38 @@ export const getNewContentId = () => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
-export const uploadContentBlob =
+const uploadContentBlob = async (contentId, blob) => {
+  const blobData = await url2blob(blob.link);
+  const file = new File([blobData], `${contentId}-${blob.name}`, {
+    type: blobData.type,
+    lastModified: new Date(),
+  });
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  return await axios.post(
+    `/api/content/upload/${contentId}?name=${blob.name}&private=${blob.protected}&type=${blob.type}&replace=false`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+};
+
+export const uploadContentBlobs =
   (name, address, contentId, type, blobs) => async (dispatch) => {
     dispatch(setLoading(true));
 
     try {
       for (let blob of blobs) {
-        await axios.post(
-          `/api/content/upload/${contentId}/blob`,
-          stringify(blob)
-        );
+        await uploadContentBlob(contentId, blob);
       }
 
       const result = await axios.post(
-        `/api/content/upload/${contentId}/finish`,
-        stringify({ name, address, type })
+        `/api/content/upload/${contentId}/finish?name=${name}&owner=${address}`
       );
 
       console.log("Signature was got:", result.data.signature);

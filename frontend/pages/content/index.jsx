@@ -144,7 +144,7 @@ const ContentManager = () => {
                     </div>
                     <div className="mt-2 content-id w-full text-base break-all p-1 rounded-full bg-gradient-to-r from-blue-200 to-transparent ">
                       <div className="bg-clip-text text-transparent bg-gradient-to-r from-[#00000044] to-black pl-5">
-                        {element.contentId}
+                        {element.content_id}
                       </div>
                     </div>
                   </div>
@@ -159,26 +159,22 @@ const ContentManager = () => {
                         />
                       </Link>
 
-                      {element.isOwner ? (
-                        <Button
-                          size="base"
-                          icon={<FontAwesomeIcon icon={faExternalLinkAlt} />}
-                          text="Transfer"
-                          onClick={() => transferModal(element)}
-                          className="bg-white rounded-full text-black py-1 mr-0 mb-2"
-                        />
-                      ) : null}
+                      <Button
+                        size="base"
+                        icon={<FontAwesomeIcon icon={faExternalLinkAlt} />}
+                        text="Transfer"
+                        onClick={() => transferModal(element)}
+                        className="bg-white rounded-full text-black py-1 mr-0 mb-2"
+                      />
                     </div>
                     <div className="content-ct flex flex-row justify-end">
-                      {element.isOwner ? (
-                        <Button
-                          size="base"
-                          icon={<FontAwesomeIcon icon={faHammer} />}
-                          text="Mint"
-                          onClick={() => mintModal(element)}
-                          className="border-0 bg-[#0d99ff] text-white py-1 br-0 mb-2 w-full sm:w-40 rounded-full"
-                        />
-                      ) : null}
+                      <Button
+                        size="base"
+                        icon={<FontAwesomeIcon icon={faHammer} />}
+                        text="Mint"
+                        onClick={() => mintModal(element)}
+                        className="border-0 bg-[#0d99ff] text-white py-1 br-0 mb-2 w-full sm:w-40 rounded-full"
+                      />
                     </div>
                   </div>
                 </div>
