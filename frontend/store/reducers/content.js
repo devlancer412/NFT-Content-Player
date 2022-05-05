@@ -7,7 +7,7 @@ import {
   UPDATE_BLOB,
   UPDATE_BLOB_LINK,
   CLEAR_CONTENT,
-  SET_CONTENT_TYPE,
+  SET_CONTENT_DESCRIPTION,
   SET_FINISHED,
   SET_SIGNATURED,
 } from "../types";
@@ -15,7 +15,7 @@ import {
 const initialState = {
   name: "",
   contentId: "",
-  type: "Type-1",
+  description: "",
   blobs: [],
   finished: false,
   signatured: false,
@@ -27,8 +27,8 @@ const contentReducer = (state = initialState, { type, payload }) => {
       return { ...state, name: payload };
     case SET_CONTENT_ID:
       return { ...state, contentId: payload };
-    case SET_CONTENT_TYPE:
-      return { ...state, type: payload };
+    case SET_CONTENT_DESCRIPTION:
+      return { ...state, description: payload };
     case SET_BLOBS:
       return { ...state, blobs: payload };
     case ADD_BLOB:

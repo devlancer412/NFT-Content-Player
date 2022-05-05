@@ -29,7 +29,6 @@ const NewContent = () => {
     console.log(contentOwner);
     if (!contentOwner) {
       dispatch(setError("Please connect wallet"));
-      dispatch(setError("Redirecting to content manager page"));
       router.push("/content/");
     }
   }, [contentOwner]);
@@ -51,9 +50,9 @@ const NewContent = () => {
   return (
     <main className="flex flex-col w-full flex-1">
       <div className="header top-0 backdrop-blur-sm bg-opacity-30 bg-indigo-300 w-full z-10 flex items-center pl-5">
-        <span class="flex h-3 w-3">
-          <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-sky-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+        <span className="flex h-3 w-3">
+          <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-sky-400 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
         </span>
         <h1 className="text-3xl font-bold leading-loose px-5">
           Upload Blob - {content.name}

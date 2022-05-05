@@ -11,14 +11,14 @@ import {
   UPDATE_BLOB,
   UPDATE_BLOB_LINK,
   CLEAR_CONTENT,
-  SET_CONTENT_TYPE,
+  SET_CONTENT_DESCRIPTION,
   SET_FINISHED,
   SET_SIGNATURED,
 } from "../types";
 
 import { setError, setLoading } from "./state";
 import { newContentCreate } from "./web3-api";
-import { blobToFile, readFileAsync, url2blob } from "../../services/read-file";
+import { url2blob } from "../../services/read-file";
 
 export const setContentName = (name) => (dispatch) => {
   return dispatch({
@@ -34,10 +34,10 @@ export const setContentId = (contentId) => (dispatch) => {
   });
 };
 
-export const setContentType = (contentId) => (dispatch) => {
+export const setContentDescription = (description) => (dispatch) => {
   return dispatch({
-    type: SET_CONTENT_TYPE,
-    payload: contentId,
+    type: SET_CONTENT_DESCRIPTION,
+    payload: description,
   });
 };
 
@@ -115,7 +115,7 @@ const uploadContentBlob = async (contentId, blob) => {
 };
 
 export const uploadContentBlobs =
-  (name, address, contentId, type, blobs) => async (dispatch) => {
+  (name, address, contentId, description, blobs) => async (dispatch) => {
     dispatch(setLoading(true));
 
     try {
@@ -123,8 +123,13 @@ export const uploadContentBlobs =
         await uploadContentBlob(contentId, blob);
       }
 
+      await axios.post(`/api/content/upload/${contentId}/meta`, {
+        name,
+        description,
+      });
+
       const result = await axios.post(
-        `/api/content/upload/${contentId}/finish?name=${name}&owner=${address}`
+        `/api/content/upload/${contentId}/finish?owner=${address}`
       );
 
       console.log("Signature was got:", result.data.signature);
@@ -136,10 +141,7 @@ export const uploadContentBlobs =
       if (!newContentResult) {
         dispatch(setError("Failed content creation"));
 
-        await axios.delete(
-          `/api/content/upload/${contentId}`,
-          stringify(address)
-        );
+        await axios.delete(`/api/content/upload/${contentId}?name=${name}`);
 
         dispatch(setLoading(false));
         return;
@@ -150,10 +152,7 @@ export const uploadContentBlobs =
     } catch (err) {
       console.log(err);
 
-      await axios.delete(
-        `/api/content/upload/${contentId}`,
-        stringify(address)
-      );
+      await axios.delete(`/api/content/upload/${contentId}?${name}`);
 
       if (err && !err.response) {
         dispatch(setError("Can't reache to server"));

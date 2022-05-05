@@ -35,20 +35,13 @@ export const getPersonalContentList = async (address) => {
   }
 };
 
-export const getContentData = async (address, contentId) => {
-  if (typeof address != "string") {
-    return { success: false, data: "Please connect to wallet" };
-  }
-  if (address.length != 42) {
-    return { success: false, data: "Please connect to wallet" };
-  }
-
+export const getContentData = async (contentId) => {
   if (!contentId) {
     return { success: false, data: "Please insert correct content id" };
   }
 
   try {
-    const { data } = await axios.get(`/api/content/${address}/${contentId}`);
+    const { data } = await axios.get(`/api/content/${contentId}`);
 
     return { success: true, data };
   } catch (err) {

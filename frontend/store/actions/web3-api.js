@@ -89,11 +89,6 @@ export const newContentCreate =
         return true;
       }
 
-      await axios.delete(
-        `/api/content/upload/${contentId}`,
-        stringify(address)
-      );
-
       dispatch(setError(err.message));
 
       dispatch(setLoading(false));

@@ -1,16 +1,16 @@
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
+import Link from "next/link";
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import ReactPlayer from "react-player";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHandPointLeft } from "@fortawesome/free-solid-svg-icons";
 
 import { setError, setLoading } from "../../../store/actions/state";
 import { getContentData } from "../../../services/content-api";
-
-import ImageDropZone from "../../../components/dropzone/image";
-import VideoDropZone from "../../../components/dropzone/video";
-
-// const BlobTypes = ["Video", "Image"];
-// const ContentTypes = ["Type-1", "Type-2"];
+import Button from "../../../components/button/Button";
 
 const ContentViewer = (props) => {
   const router = useRouter();
@@ -18,23 +18,28 @@ const ContentViewer = (props) => {
   const address = useSelector((store) => store.state.address);
 
   const [content, setContent] = useState({
-    name: "",
-    contentId: "",
-    type: "",
-    blobs: [],
+    content_id: "",
+    meta: {
+      name: "",
+      description: "",
+    },
+    content: [],
   });
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (!address) {
       dispatch(setError("Please connect wallet"));
-      router.push("/");
+      Router.push("/");
     }
   });
 
+  console.log(content);
+
   useEffect(async () => {
     dispatch(setLoading(true));
-    const result = await getContentData(address, contentId);
+    const result = await getContentData(contentId);
     dispatch(setLoading(false));
     if (!result.success) {
       dispatch(setError(result.data));
@@ -45,17 +50,23 @@ const ContentViewer = (props) => {
   }, [contentId]);
 
   return (
-    <main className="flex flex-col w-full flex-1 px-5">
-      <div className="header">
-        <h1 className="text-3xl font-bold leading-loose">Blob Upload</h1>
+    <main className="flex flex-col w-full flex-1">
+      <div className="header top-0 backdrop-blur-sm bg-opacity-30 bg-indigo-300 w-full z-10 flex items-center pl-5">
+        <span className="flex h-3 w-3">
+          <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-sky-400 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+        </span>
+        <h1 className="text-3xl font-bold leading-loose px-5">
+          Content Detail
+        </h1>
       </div>
       <div className="Title p-5">
-        <div className="w-full">Title : {content.name}</div>
-        <div className="w-full">ContentId : {content.contentId}</div>
-        <div className="w-full">Type : {content.type}</div>
+        <div className="w-full">Title : {content.meta.name}</div>
+        <div className="w-full">ContentId : {contentId}</div>
+        <div className="w-full">Description : {content.meta.description}</div>
       </div>
       <div className="main flex flex-col w-full p-5 border-y-2 border-gray-700 h-full flex-1">
-        {content.blobs.map((element, index) => {
+        {content.content.map((element, index) => {
           return (
             <div
               className="content-view flex flex-row w-full mb-10 justify-between"
@@ -65,7 +76,7 @@ const ContentViewer = (props) => {
                 <div className="content-header flex flex-col w-full">
                   <div className="content-name w-full text-xl">
                     <div className="w-full">Name: {element.name}</div>
-                    <div className="w-full">Type: {element.type}</div>
+                    <div className="w-full">Type: {element.content_type}</div>
                   </div>
                 </div>
                 <div className="content-edit flex flex-row justify-between font-semibold">
@@ -75,15 +86,29 @@ const ContentViewer = (props) => {
                   <div className="content-ct flex flex-row justify-end"></div>
                 </div>
               </div>
-              <div className="content-preview w-1/3">
-                {element.type === "Image" ? <ImageDropZone /> : null}
-                {element.type === "Video" ? <VideoDropZone /> : null}
+              <div className="content-preview w-1/2">
+                {element.content_type.substr(0, 5) === "image" ? (
+                  <img src={element.url} />
+                ) : null}
+                {element.content_type.substr(0, 5) === "video" ? (
+                  <ReactPlayer src={element.url} />
+                ) : null}
               </div>
             </div>
           );
         })}
       </div>
-      <div className="footer p-5 w-full">
+      <div className="footer p-5 w-full bg-indigo-300 bg-opacity-60 backdrop-blur-sm">
+        <Link href="/content/">
+          <div className="float-left w-full sm:w-auto">
+            <Button
+              size="base"
+              icon={<FontAwesomeIcon icon={faHandPointLeft} />}
+              text="Ge Back"
+              className="border-0 bg-[#3E5E93] text-white py-1 w-full sm:w-48"
+            />
+          </div>
+        </Link>
         {/* <div className="float-left">
           <Button
             size="base"

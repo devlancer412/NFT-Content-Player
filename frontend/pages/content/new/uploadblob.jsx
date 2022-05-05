@@ -7,6 +7,7 @@ import { faPlus, faUpload, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "../../../components/button/Button";
 import Input from "../../../components/Form/controls/input";
+import TextArea from "../../../components/Form/controls/textarea";
 import Select from "../../../components/Form/controls/select";
 
 import { setError } from "../../../store/actions/state";
@@ -16,7 +17,7 @@ import {
   clearContent,
   removeBlob,
   setContentName,
-  setContentType,
+  setContentDescription,
   updateBlob,
   updateBlobLink,
 } from "../../../store/actions/content";
@@ -29,10 +30,10 @@ import {
 } from "../../../store/actions/content";
 
 const BlobTypes = ["Video", "Image"];
-const ContentTypes = ["Type-1", "Type-2"];
 
 const BlobUploadManager = () => {
   const name = useSelector((store) => store.content.name);
+  const description = useSelector((store) => store.content.description);
   const contentId = useSelector((store) => store.content.contentId);
   const address = useSelector((store) => store.state.address);
   const blobs = useSelector((store) => store.content.blobs);
@@ -48,7 +49,9 @@ const BlobUploadManager = () => {
   });
 
   useEffect(() => {
-    dispatch(getNewContentId());
+    if (address) {
+      dispatch(getNewContentId());
+    }
   }, [address]);
 
   useEffect(() => {
@@ -99,15 +102,15 @@ const BlobUploadManager = () => {
       );
     }
 
-    dispatch(uploadContentBlobs(name, address, contentId, type, blobs));
+    dispatch(uploadContentBlobs(name, address, contentId, description, blobs));
   };
 
   return (
     <main className="flex flex-col w-full flex-1">
       <div className="header top-0 backdrop-blur-sm bg-opacity-30 bg-indigo-300 w-full z-10 flex items-center pl-5">
-        <span class="flex h-3 w-3">
-          <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-sky-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+        <span className="flex h-3 w-3">
+          <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-sky-400 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
         </span>
         <h1 className="text-3xl font-bold leading-loose px-5">Upload Blob</h1>
       </div>
@@ -117,15 +120,16 @@ const BlobUploadManager = () => {
           value={name}
           handleChange={(value) => dispatch(setContentName(value))}
           placeholder="Rick and Morty Season 1"
-          className="w-2/3"
+          className="w-full md:w-1/2"
         />
-        <Select
-          name="Type"
-          value={ContentTypes.indexOf(type)}
-          items={ContentTypes}
-          handleChange={(value) =>
-            dispatch(setContentType(ContentTypes[value]))
+        <Input
+          name="Description"
+          value={description}
+          handleChange={(description) =>
+            dispatch(setContentDescription(description))
           }
+          placeholder="...."
+          className="w-full md:w-2/3"
         />
       </div>
       <div className="main flex flex-col w-full border-y-2 border-[#e6e6e6] h-full flex-1">
