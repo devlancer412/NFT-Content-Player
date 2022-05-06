@@ -11,6 +11,7 @@ import { faHandPointLeft } from "@fortawesome/free-solid-svg-icons";
 import { setError, setLoading } from "../../../store/actions/state";
 import { getContentData } from "../../../services/content-api";
 import Button from "../../../components/button/Button";
+import { unLockPrivate } from "../../../store/actions/web3-api";
 
 const ContentViewer = (props) => {
   const router = useRouter();
@@ -38,6 +39,8 @@ const ContentViewer = (props) => {
   console.log(content);
 
   useEffect(async () => {
+    await dispatch(unLockPrivate(address, contentId));
+
     dispatch(setLoading(true));
     const result = await getContentData(contentId);
     dispatch(setLoading(false));

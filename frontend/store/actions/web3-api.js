@@ -183,3 +183,63 @@ export const mintNFTForContent =
       return false;
     }
   };
+
+export const unLockPrivate = (address, contentId) => async (dispatch) => {
+  if (window.web3.currentProvider.selectedAddress != address) {
+    dispatch(setError("Your account has changed, please reconnect to wallet"));
+    return true;
+  }
+
+  dispatch(setLoading(true));
+
+  let tokenId, signature, timestamp;
+  try {
+    tokenId = await window.proofContract.methods
+      .getNFTForContent(contentId)
+      .call({ from: address });
+
+    if (
+      tokenId ===
+      "115792089237316195423570985008687907853269984665640564039457584007913129639935"
+    ) {
+      dispatch(
+        setError("You aren't NFT owner!, So you can't see private contents")
+      );
+      dispatch(setLoading(false));
+      return;
+    }
+    tokenId = "0x" + tokenId;
+    const curDate = new Date();
+    timestamp = curDate.getTime();
+
+    console.log(window.web3.utils.soliditySha3(timestamp, address, tokenId));
+
+    signature = await window.web3.eth.personal.sign(
+      window.web3.utils.soliditySha3(timestamp, address, tokenId),
+      address
+    );
+
+    console.log({ timestamp, address, tokenId, signature });
+  } catch (err) {
+    console.log(err);
+    dispatch(setError(err.message));
+    dispatch(setLoading(false));
+    return;
+  }
+
+  try {
+    const result = await axios.get(
+      `/api/content/unlock/${tokenId}?signature=${signature}&timestamp=${timestamp}`
+    );
+
+    console.log(result);
+  } catch (err) {
+    console.log(err);
+    if (!err.response) {
+      dispatch(setError("Can't reache to the server"));
+    } else {
+      dispatch(setError(err.response.data.detail));
+    }
+  }
+  dispatch(setLoading(false));
+};
