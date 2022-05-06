@@ -157,6 +157,18 @@ contract NCPProof is ERC721, Ownable {
         return false;
     }
 
+    function getNFTForContent(uint256 contentId) public view returns (uint256) {
+        uint256 total = countOfNFT();
+
+        for (uint256 token = 0; token < total; token++) {
+            if (ownerOf(token) == msg.sender && contentOf(token) == contentId) {
+                return token;
+            }
+        }
+
+        return uint256(int256(-1));
+    }
+
     function hasNFTForContents(address owner, uint256[] memory contentIds)
         public
         view
