@@ -39,8 +39,17 @@ const ContentViewer = (props) => {
   console.log(content);
 
   useEffect(async () => {
-    await dispatch(unLockPrivate(address, contentId));
+    dispatch(setLoading(true));
+    const unLockResult = await unLockPrivate(address, contentId);
+    dispatch(setLoading(false));
 
+    console.log(unLockResult);
+    if (unLockResult.success) {
+      setContent(unLockResult.data);
+      return;
+    }
+
+    dispatch(setError(unLockResult.data));
     dispatch(setLoading(true));
     const result = await getContentData(contentId);
     dispatch(setLoading(false));

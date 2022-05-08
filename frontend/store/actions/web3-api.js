@@ -8,6 +8,7 @@ import { toastr } from "react-toastify";
 import { setAddress, setError, setLoading } from "./state";
 
 import CONTRACTDATA from "../../abi/NCPProof.json";
+import { faL } from "@fortawesome/free-solid-svg-icons";
 
 const abi = CONTRACTDATA.abi;
 
@@ -184,13 +185,13 @@ export const mintNFTForContent =
     }
   };
 
-export const unLockPrivate = (address, contentId) => async (dispatch) => {
+export const unLockPrivate = async (address, contentId) => {
   if (window.web3.currentProvider.selectedAddress != address) {
-    dispatch(setError("Your account has changed, please reconnect to wallet"));
-    return true;
+    return {
+      success: false,
+      data: "Your account has changed, please reconnect to wallet",
+    };
   }
-
-  dispatch(setLoading(true));
 
   let tokenId, signature, timestamp;
   try {
@@ -202,44 +203,60 @@ export const unLockPrivate = (address, contentId) => async (dispatch) => {
       tokenId ===
       "115792089237316195423570985008687907853269984665640564039457584007913129639935"
     ) {
-      dispatch(
-        setError("You aren't NFT owner!, So you can't see private contents")
-      );
-      dispatch(setLoading(false));
-      return;
+      return {
+        success: false,
+        data: "You aren't NFT owner!, So you can't see private contents",
+      };
     }
-    tokenId = "0x" + tokenId;
-    const curDate = new Date();
-    timestamp = curDate.getTime();
 
-    console.log(window.web3.utils.soliditySha3(timestamp, address, tokenId));
+    timestamp = Math.floor(Date.now() / 1000);
 
     signature = await window.web3.eth.personal.sign(
       window.web3.utils.soliditySha3(timestamp, address, tokenId),
       address
     );
 
+    tokenId = tokenId.toString(16);
+
+    if (tokenId.length % 2 === 1) {
+      tokenId = "0x0" + tokenId;
+    } else {
+      tokenId = "0x" + tokenId;
+    }
+
     console.log({ timestamp, address, tokenId, signature });
   } catch (err) {
     console.log(err);
-    dispatch(setError(err.message));
-    dispatch(setLoading(false));
-    return;
+
+    return {
+      success: false,
+      data: err.message,
+    };
   }
+
+  console.log({ tokenId, signature, timestamp });
 
   try {
     const result = await axios.get(
       `/api/content/unlock/${tokenId}?signature=${signature}&timestamp=${timestamp}`
     );
 
-    console.log(result);
+    return {
+      success: true,
+      data: result.data,
+    };
   } catch (err) {
-    console.log(err);
+    console.log(stringify(err));
     if (!err.response) {
-      dispatch(setError("Can't reache to the server"));
+      return {
+        success: false,
+        data: "Can't reache to the server",
+      };
     } else {
-      dispatch(setError(err.response.data.detail));
+      return {
+        success: false,
+        data: err.response.data.detail,
+      };
     }
   }
-  dispatch(setLoading(false));
 };

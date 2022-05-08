@@ -11,8 +11,13 @@ const TransferModalContent = ({ content, handleSubmit }) => {
   return (
     <div className="w-full h-[350px] flex flex-col justify-between text-left">
       <div className="header w-full flex flex-col">
-        <h1 className="w-full text-3xl font-bold text-black">{content.name}</h1>
-        <span className="w-full break-words mt-3">{content.contentId}</span>
+        <h1 className="w-full text-3xl font-bold text-black">
+          {content.meta.name}
+        </h1>
+        <span className="w-full break-words mt-3">
+          {content.meta.description}
+        </span>
+        <span className="w-full break-words mt-3">{content.content_id}</span>
       </div>
       <div className="body w-full flex-1 flex flex-col justify-center pb-5">
         <Input
@@ -32,7 +37,7 @@ const TransferModalContent = ({ content, handleSubmit }) => {
           size="base"
           icon={<FontAwesomeIcon icon={faExternalLinkAlt} />}
           text="Transfer"
-          onClick={() => handleSubmit(content.contentId, destAddress)}
+          onClick={() => handleSubmit(content.content_id, destAddress)}
           className="border-0 bg-[#0d99ff] text-white py-1 w-40"
         />
       </div>
