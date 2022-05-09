@@ -79,7 +79,7 @@ const ContentManager = () => {
     }
   };
 
-  const mintNFTHandle = async (contentId, toAddress) => {
+  const mintNFTHandle = async (contentId, toAddress, period) => {
     console.log({ contentId, toAddress });
 
     if (!toAddress) {
@@ -87,7 +87,7 @@ const ContentManager = () => {
     }
 
     const result = await dispatch(
-      mintNFTForContent(contentId, address, toAddress)
+      mintNFTForContent(contentId, address, toAddress, period)
     );
 
     if (result) {

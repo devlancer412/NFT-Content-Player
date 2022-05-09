@@ -25,10 +25,12 @@ const Modal = ({ show, onClose, children }) => {
       onClick={handleCloseClick}
     >
       <div
-        className="bg-black bg-opacity-70 backdrop-blur-sm w-[500px] h-[400px] rounded-sm p-4 relative"
+        className="bg-black bg-opacity-70 backdrop-blur-sm w-[500px] h-[400px] rounded-sm relative"
         onClick={handlePrevent}
       >
-        <div className="pt-3 w-full min-h-full text-gray-600">{children}</div>
+        <div className="pt-3 w-full min-h-full bg-white text-gray-600 p-4">
+          {children}
+        </div>
       </div>
     </div>
   ) : null;

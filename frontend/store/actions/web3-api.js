@@ -142,7 +142,8 @@ export const transferDistribution =
   };
 
 export const mintNFTForContent =
-  (contentId, address, toAddress) => async (dispatch) => {
+  (contentId, address, toAddress, period = 1) =>
+  async (dispatch) => {
     if (window.web3.currentProvider.selectedAddress != address) {
       dispatch(
         setError("Your account has changed, please reconnect to wallet")
@@ -152,11 +153,14 @@ export const mintNFTForContent =
 
     dispatch(setLoading(true));
 
-    console.log({ contentId, address });
+    let date = new Date();
+    date.setMonth(date.getMonth() + period);
+
+    const endTime = Math.floor(date.getTime() / 1000);
 
     try {
       const txHash = await window.proofContract.methods
-        .mint(toAddress, contentId)
+        .mint(toAddress, contentId, endTime)
         .send({ from: address });
 
       let transactionReceipt = null;

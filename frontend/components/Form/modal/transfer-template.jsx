@@ -20,14 +20,21 @@ const TransferModalContent = ({ content, handleSubmit }) => {
         <span className="w-full break-words mt-3">{content.content_id}</span>
       </div>
       <div className="body w-full flex-1 flex flex-col justify-center pb-5">
-        <Input
-          name="Address"
+        <label
+          for="first_name"
+          className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+        >
+          Destination Address
+        </label>
+        <input
+          type="text"
           value={destAddress}
-          handleChange={(value) => setDestAddress(value)}
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder="0x00..."
-          className="w-full"
+          onChange={(e) => setDestAddress(e.target.value)}
+          required
         />
-        <span className="w-full text-gray-400">
+        <span className="w-full text-gray-400 italic">
           Transferring the distribution rights will prevent you from minting new
           copies of the content
         </span>
