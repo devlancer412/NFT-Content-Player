@@ -28,6 +28,8 @@ contract NCPProof is ERC721, Ownable {
     mapping(uint256 => uint256) private _nftContentId;
     // contentId -> address
     mapping(uint256 => address) private _distributionOwner;
+    // nftId -> period.
+    mapping(uint256 => uint256) private _endTimes;
 
     string private _strBaseTokenURI;
 
@@ -123,7 +125,11 @@ contract NCPProof is ERC721, Ownable {
         _distributionOwner[contentId] = newOwner;
     }
 
-    function mint(address to, uint256 contentId) public returns (uint256) {
+    function mint(
+        address to,
+        uint256 contentId,
+        uint256 endtime
+    ) public returns (uint256) {
         require(
             contentDistributorOf(contentId) == msg.sender,
             "You can't mint this NFT"
@@ -133,6 +139,7 @@ contract NCPProof is ERC721, Ownable {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _nftContentId[tokenId] = contentId;
+        _endTimes[tokenId] = endtime;
 
         _mint(to, tokenId);
 
@@ -149,7 +156,11 @@ contract NCPProof is ERC721, Ownable {
         uint256 total = countOfNFT();
 
         for (uint256 token = 0; token < total; token++) {
-            if (ownerOf(token) == owner && contentOf(token) == contentId) {
+            if (
+                ownerOf(token) == owner &&
+                contentOf(token) == contentId &&
+                _endTimes[token] >= block.timestamp
+            ) {
                 return true;
             }
         }
@@ -161,7 +172,11 @@ contract NCPProof is ERC721, Ownable {
         uint256 total = countOfNFT();
 
         for (uint256 token = 0; token < total; token++) {
-            if (ownerOf(token) == msg.sender && contentOf(token) == contentId) {
+            if (
+                ownerOf(token) == msg.sender &&
+                contentOf(token) == contentId &&
+                _endTimes[token] >= block.timestamp
+            ) {
                 return token;
             }
         }
@@ -182,7 +197,9 @@ contract NCPProof is ERC721, Ownable {
             result[i] = false;
             for (uint256 token = 0; token < total; token++) {
                 if (
-                    ownerOf(token) == owner && contentOf(token) == contentIds[i]
+                    ownerOf(token) == owner &&
+                    contentOf(token) == contentIds[i] &&
+                    _endTimes[token] >= block.timestamp
                 ) {
                     result[i] = true;
                     break;
@@ -194,7 +211,11 @@ contract NCPProof is ERC721, Ownable {
     }
 
     function contentOf(uint256 tokenId) public view returns (uint256) {
-        return _nftContentId[tokenId];
+        if (_endTimes[tokenId] >= block.timestamp) {
+            return _nftContentId[tokenId];
+        }
+
+        return 0;
     }
 
     function contentDistributorOf(uint256 contentId)
