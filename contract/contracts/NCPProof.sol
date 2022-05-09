@@ -28,6 +28,8 @@ contract NCPProof is ERC721, Ownable {
     mapping(uint256 => uint256) private _nftContentId;
     // contentId -> address
     mapping(uint256 => address) private _distributionOwner;
+    // contentId -> (address -> bool)
+    mapping(uint256 => mapping(address => bool)) _distributors;
     // nftId -> period.
     mapping(uint256 => uint256) private _endTimes;
 
@@ -96,6 +98,7 @@ contract NCPProof is ERC721, Ownable {
         );
 
         _distributionOwner[contentId] = contentOwner;
+        _distributors[contentId][contentOwner] = true;
 
         return true;
     }
@@ -123,6 +126,7 @@ contract NCPProof is ERC721, Ownable {
         );
 
         _distributionOwner[contentId] = newOwner;
+        _distributors[contentId][newOwner] = true;
     }
 
     function mint(
@@ -131,7 +135,7 @@ contract NCPProof is ERC721, Ownable {
         uint256 endtime
     ) public returns (uint256) {
         require(
-            contentDistributorOf(contentId) == msg.sender,
+            isContentDistributorOf(contentId, msg.sender),
             "You can't mint this NFT"
         );
         require(!hasNFTForContent(to, contentId), "NFT already minted");
@@ -218,12 +222,16 @@ contract NCPProof is ERC721, Ownable {
         return 0;
     }
 
-    function contentDistributorOf(uint256 contentId)
+    function contentOwnerOf(uint256 contentId) public view returns (address) {
+        return _distributionOwner[contentId];
+    }
+
+    function isContentDistributorOf(uint256 contentId, address distributor)
         public
         view
-        returns (address)
+        returns (bool)
     {
-        return _distributionOwner[contentId];
+        return _distributors[contentId][distributor];
     }
 
     function isDistributorOfContents(address owner, uint256[] memory contentIds)
@@ -235,21 +243,21 @@ contract NCPProof is ERC721, Ownable {
         bool[] memory results = new bool[](len);
 
         for (uint256 i = 0; i < len; i++) {
-            results[i] = owner == _distributionOwner[contentIds[i]];
+            results[i] = _distributors[contentIds[i]][owner];
         }
 
         return results;
     }
 
-    function isDistributorOf(address owner, uint256 contentId)
+    function isOwnerOf(address owner, uint256 contentId)
         public
         view
         returns (bool)
     {
         return
-            contentDistributorOf(contentId) == address(0)
+            contentOwnerOf(contentId) == address(0)
                 ? true
-                : contentDistributorOf(contentId) == owner;
+                : _distributors[contentId][owner];
     }
 
     function canSeeProtected(address owner, uint256 contentId)
@@ -258,8 +266,7 @@ contract NCPProof is ERC721, Ownable {
         returns (bool)
     {
         return
-            isDistributorOf(owner, contentId) ||
-            hasNFTForContent(owner, contentId);
+            isOwnerOf(owner, contentId) || hasNFTForContent(owner, contentId);
     }
 
     function _burn(uint256 tokenId) internal override {
