@@ -41,6 +41,7 @@ contract NCPProof is ERC721, Ownable {
         _strBaseTokenURI = "https://ipfs/";
     }
 
+    // set base uri for token. token uri = base/tokenId.json
     function setBaseTokenURI(string memory baseURI) public onlyOwner {
         _strBaseTokenURI = baseURI;
     }
@@ -54,6 +55,7 @@ contract NCPProof is ERC721, Ownable {
         _contentServers[contentServer] = set;
     }
 
+    // Return true if addr is content server.
     function isContentServer(address addr) public view returns (bool) {
         if (addr == owner()) {
             return true;
@@ -62,10 +64,12 @@ contract NCPProof is ERC721, Ownable {
         return _contentServers[addr];
     }
 
+    // return true if contentId is already used.
     function isSetted(uint256 contentId) public view returns (bool) {
         return _distributionOwner[contentId] != address(0);
     }
 
+    // get signer from sign tring and signature.
     function getSigner(bytes32 hash, bytes memory signature)
         internal
         pure
@@ -103,6 +107,7 @@ contract NCPProof is ERC721, Ownable {
         return true;
     }
 
+    // Transfer NFT for contentId to newOwner.
     function transferNFTRights(uint256 contentId, address newOwner)
         public
         returns (bool)
@@ -119,6 +124,7 @@ contract NCPProof is ERC721, Ownable {
         return false;
     }
 
+    // transfer Ownership of contentId to newOwner.
     function transferContentRights(uint256 contentId, address newOwner) public {
         require(
             _distributionOwner[contentId] == msg.sender,
@@ -129,6 +135,7 @@ contract NCPProof is ERC721, Ownable {
         _distributors[contentId][newOwner] = true;
     }
 
+    // mint a NFT for contentId to 'to' and it will burn after endtime.
     function mint(
         address to,
         uint256 contentId,
@@ -152,6 +159,7 @@ contract NCPProof is ERC721, Ownable {
         return tokenId;
     }
 
+    // return true if owner have NFT for contentId and time in period.
     function hasNFTForContent(address owner, uint256 contentId)
         public
         view
@@ -172,6 +180,7 @@ contract NCPProof is ERC721, Ownable {
         return false;
     }
 
+    // return NFT tokenId of msg.sender for contentId
     function getNFTForContent(uint256 contentId) public view returns (uint256) {
         uint256 total = countOfNFT();
 
@@ -188,6 +197,7 @@ contract NCPProof is ERC721, Ownable {
         return uint256(int256(-1));
     }
 
+    // returns a array of bool like hasNFTForContent.
     function hasNFTForContents(address owner, uint256[] memory contentIds)
         public
         view
@@ -214,6 +224,7 @@ contract NCPProof is ERC721, Ownable {
         return result;
     }
 
+    // return contentId of tokenId in period time.
     function contentOf(uint256 tokenId) public view returns (uint256) {
         if (_endTimes[tokenId] >= block.timestamp) {
             return _nftContentId[tokenId];
@@ -222,10 +233,12 @@ contract NCPProof is ERC721, Ownable {
         return 0;
     }
 
+    // return owner address of contentId.
     function contentOwnerOf(uint256 contentId) public view returns (address) {
         return _distributionOwner[contentId];
     }
 
+    // return true if 'distributor' is distributor of contentId
     function isContentDistributorOf(uint256 contentId, address distributor)
         public
         view
@@ -234,6 +247,7 @@ contract NCPProof is ERC721, Ownable {
         return _distributors[contentId][distributor];
     }
 
+    // return a array of bool like isContentDistributorOf
     function isDistributorOfContents(address owner, uint256[] memory contentIds)
         public
         view
@@ -249,6 +263,7 @@ contract NCPProof is ERC721, Ownable {
         return results;
     }
 
+    // return true if 'owner' is owner of contentId.
     function isOwnerOf(address owner, uint256 contentId)
         public
         view
@@ -260,6 +275,7 @@ contract NCPProof is ERC721, Ownable {
                 : _distributors[contentId][owner];
     }
 
+    // return true if either 'owner' is owner of conentId of 'owner' has NFT for contentId in period time.
     function canSeeProtected(address owner, uint256 contentId)
         public
         view
@@ -269,22 +285,27 @@ contract NCPProof is ERC721, Ownable {
             isOwnerOf(owner, contentId) || hasNFTForContent(owner, contentId);
     }
 
+    // burn a NFT (don't use)
     function _burn(uint256 tokenId) internal override {
         super._burn(tokenId);
     }
 
+    // return total count of NFT
     function countOfNFT() public view returns (uint256) {
         return _tokenIdCounter.current();
     }
 
+    // withdraw
     function withdraw() public onlyOwner {
         payable(msg.sender).transfer(address(this).balance);
     }
 
+    // get base uri.
     function _baseURI() internal view override returns (string memory) {
         return _strBaseTokenURI;
     }
 
+    // return token uri.
     function tokenURI(uint256 tokenId)
         public
         view
@@ -309,6 +330,7 @@ contract NCPProof is ERC721, Ownable {
                 : "";
     }
 
+    // get new content Id
     function newContentId() public view returns (uint256) {
         require(isContentServer(msg.sender), "You don't permitted this action");
         uint256 id;
