@@ -107,28 +107,50 @@ contract NCPProof is ERC721, Ownable {
         return true;
     }
 
-    // Transfer NFT for contentId to newOwner.
-    function transferNFTRights(uint256 contentId, address newOwner)
-        public
-        returns (bool)
-    {
-        uint256 total = countOfNFT();
+    // set addr to distributor of contentId
+    function setDistributor(uint256 contentId, address addr) public {
+        require(
+            contentOwnerOf(contentId) == msg.sender,
+            "You are not content owner"
+        );
+        require(!isContentDistributorOf(contentId, addr), "Already set");
 
-        for (uint256 token = 0; token < total; token++) {
-            if (ownerOf(token) == msg.sender && contentOf(token) == contentId) {
-                _transfer(msg.sender, newOwner, token);
-                return true;
-            }
-        }
-
-        return false;
+        _distributors[contentId][addr] = true;
     }
+
+    // remove addr from distributor of contentId
+    function removeDistributor(uint256 contentId, address addr) public {
+        require(
+            contentOwnerOf(contentId) == msg.sender,
+            "You are not content owner"
+        );
+        require(isContentDistributorOf(contentId, addr), "Already set");
+
+        _distributors[contentId][addr] = false;
+    }
+
+    // // Transfer NFT for contentId to newOwner.
+    // function transferNFTRights(uint256 contentId, address newOwner)
+    //     public
+    //     returns (bool)
+    // {
+    //     uint256 total = countOfNFT();
+
+    //     for (uint256 token = 0; token < total; token++) {
+    //         if (ownerOf(token) == msg.sender && contentOf(token) == contentId) {
+    //             _transfer(msg.sender, newOwner, token);
+    //             return true;
+    //         }
+    //     }
+
+    //     return false;
+    // }
 
     // transfer Ownership of contentId to newOwner.
     function transferContentRights(uint256 contentId, address newOwner) public {
         require(
             _distributionOwner[contentId] == msg.sender,
-            "You are not distributor of this content"
+            "You are not owner of this content"
         );
 
         _distributionOwner[contentId] = newOwner;
@@ -168,12 +190,8 @@ contract NCPProof is ERC721, Ownable {
         uint256 total = countOfNFT();
 
         for (uint256 token = 0; token < total; token++) {
-            if (
-                ownerOf(token) == owner &&
-                contentOf(token) == contentId &&
-                _endTimes[token] >= block.timestamp
-            ) {
-                return true;
+            if (ownerOf(token) == owner && contentOf(token) == contentId) {
+                return _endTimes[token] >= block.timestamp;
             }
         }
 
