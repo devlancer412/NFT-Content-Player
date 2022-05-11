@@ -1,15 +1,15 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
-import ReactPlayer from "react-player";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faVideo } from "@fortawesome/free-solid-svg-icons";
+import { faPlayCircle } from "@fortawesome/free-solid-svg-icons";
+import ReactPlayer from "react-player";
 
 const VideoDropZone = ({ file, fileHandle }) => {
   const [src, setSrc] = useState(file);
 
   useEffect(() => {
-    fileHandle(file);
-  }, [file]);
+    fileHandle(src);
+  }, [src]);
 
   const onDrop = useCallback(async (acceptedFile) => {
     const file = acceptedFile[0];
@@ -21,6 +21,7 @@ const VideoDropZone = ({ file, fileHandle }) => {
     onDrop,
     accept: "video/*",
   });
+
   return (
     <div className="p-[2px] rounded-lg border-solid border-slate-700 border-2 group">
       <div className="w-full bg-gray-600 rounded-lg h-full">
@@ -29,16 +30,11 @@ const VideoDropZone = ({ file, fileHandle }) => {
           {...getRootProps()}
         >
           <input {...getInputProps()} />
-          {src.preview ? (
-            <ReactPlayer
-              url={src.preview}
-              controls
-              width="100%"
-              height="100%"
-            />
+          {src ? (
+            <ReactPlayer url={src} controls width="100%" height="100%" />
           ) : (
-            <div className="flex flex-col justify-center align-middle text-center text-gray-800 h-40  ">
-              <FontAwesomeIcon icon={faVideo} />
+            <div className="flex flex-col justify-center align-middle text-center text-white h-40">
+              <FontAwesomeIcon icon={faPlayCircle} />
             </div>
           )}
         </div>

@@ -123,9 +123,16 @@ export const uploadContentBlobs =
         await uploadContentBlob(contentId, blob);
       }
 
+      const episodes = blobs
+        .filter((ele) => ele.name != "banner" && ele.name != "trailer")
+        .map((ele) => ele.name);
+
       await axios.post(`/api/content/upload/${contentId}/meta`, {
         name,
         description,
+        banner: "banner-image",
+        trailer: "trailer",
+        episodes,
       });
 
       const result = await axios.post(

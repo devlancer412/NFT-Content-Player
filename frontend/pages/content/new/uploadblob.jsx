@@ -7,7 +7,6 @@ import { faPlus, faUpload, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "../../../components/button/Button";
 import Input from "../../../components/Form/controls/input";
-import TextArea from "../../../components/Form/controls/textarea";
 import Select from "../../../components/Form/controls/select";
 
 import { setError } from "../../../store/actions/state";
@@ -37,7 +36,6 @@ const BlobUploadManager = () => {
   const contentId = useSelector((store) => store.content.contentId);
   const address = useSelector((store) => store.state.address);
   const blobs = useSelector((store) => store.content.blobs);
-  const type = useSelector((store) => store.content.type);
   const finished = useSelector((store) => store.content.finished);
   const dispatch = useDispatch();
 
@@ -69,8 +67,9 @@ const BlobUploadManager = () => {
       addBlob({
         name: "",
         link: "",
-        type: "Image",
+        type: "Video",
         protected: false,
+        editable: true,
       })
     );
   };
@@ -137,7 +136,7 @@ const BlobUploadManager = () => {
           return (
             <div
               className="border-b-[2px] border-b-[#ffffff55] last:border-none px-5 py-8 content-view flex flex-col md:flex-row w-full justify-between"
-              key={index}
+              key={`${contentId}-${index}`}
             >
               <div className="content-detail w-full md:w-96 flex flex-col justify-between pr-5">
                 <div className="content-header flex flex-col w-full">
@@ -153,6 +152,7 @@ const BlobUploadManager = () => {
                       }
                       placeholder="poster-image"
                       className="w-full"
+                      disabled={!element.editable}
                     />
                     <Select
                       name="Type"
@@ -161,31 +161,40 @@ const BlobUploadManager = () => {
                       handleChange={(value) =>
                         updateBlobType(index, BlobTypes[value])
                       }
+                      disabled={!element.editable}
                     />
                   </div>
                 </div>
                 <div className="content-edit flex flex-row justify-between font-semibold">
                   <div className="content-ct flex flex-row justify-start">
                     <label className="inline-flex justify-between items-center">
-                      <input
-                        type="checkbox"
-                        name="type"
-                        value={element.protected}
-                        onChange={() =>
-                          updateProtectedHandle(index, !element.protected)
-                        }
-                      />
-                      <span className="ml-2">Protected</span>
+                      {element.editable ? (
+                        <>
+                          <input
+                            type="checkbox"
+                            name="type"
+                            value={element.protected}
+                            onChange={() =>
+                              updateProtectedHandle(index, !element.protected)
+                            }
+                          />
+                          <span className="ml-2">Protected</span>
+                        </>
+                      ) : (
+                        <div>{element.protected ? "Protected" : "Public"}</div>
+                      )}
                     </label>
                   </div>
                   <div className="content-ct flex flex-row justify-end">
-                    <Button
-                      size="base"
-                      icon={<FontAwesomeIcon icon={faTrash} />}
-                      text=""
-                      onClick={() => dispatch(removeBlob(index))}
-                      className="bg-transparent text-rose-800 border-red-300 py-1 px-2 pl-4"
-                    />
+                    {element.editable ? (
+                      <Button
+                        size="base"
+                        icon={<FontAwesomeIcon icon={faTrash} />}
+                        text=""
+                        onClick={() => dispatch(removeBlob(index))}
+                        className="bg-transparent text-rose-800 border-red-300 py-1 px-2 pl-4"
+                      />
+                    ) : null}
                   </div>
                 </div>
               </div>

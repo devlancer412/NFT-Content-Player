@@ -20,6 +20,7 @@ const ImageDropZone = ({ file, fileHandle }) => {
     onDrop,
     accept: "image/*",
   });
+
   return (
     <div className="p-[2px] rounded-lg border-solid border-slate-700 border-2 group">
       <div className="w-full bg-gray-600 rounded-lg h-full">

@@ -84,8 +84,8 @@ export const newContentCreate =
       dispatch(setLoading(false));
       return true;
     } catch (err) {
-      console.log(err.code);
-      if (err.code == -32602) {
+      console.log(err);
+      if (err?.code == -32602) {
         dispatch(setLoading(false));
         return true;
       }

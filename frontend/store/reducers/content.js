@@ -16,7 +16,22 @@ const initialState = {
   name: "",
   contentId: "",
   description: "",
-  blobs: [],
+  blobs: [
+    {
+      name: "banner-image",
+      link: "",
+      type: "Image",
+      protected: false,
+      editable: false,
+    },
+    {
+      name: "trailer",
+      link: "",
+      type: "Video",
+      protected: false,
+      editable: false,
+    },
+  ],
   finished: false,
   signatured: false,
 };

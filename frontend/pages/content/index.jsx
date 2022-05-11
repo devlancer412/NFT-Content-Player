@@ -26,6 +26,7 @@ import {
   transferDistribution,
   mintNFTForContent,
 } from "../../store/actions/web3-api";
+import { stringify } from "postcss";
 
 const ContentManager = () => {
   const [contents, setContents] = useState([]);
@@ -175,7 +176,10 @@ const ContentManager = () => {
                 </div>
               </div>
               <div className="content-preview lg:w-1/4 w-full mt-5 lg:mt-0">
-                <div className="w-full h-40 bg-gray-500"></div>
+                <img
+                  className="w-full h-40 bg-gray-500"
+                  src={element.content["banner-image"]?.url}
+                />
               </div>
             </div>
           );

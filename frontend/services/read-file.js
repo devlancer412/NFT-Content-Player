@@ -1,9 +1,10 @@
+import axios from "axios";
+
 export const url2blob = async (url) => {
   try {
-    const data = await fetch(url);
-    const blob = await data.blob();
-    console.log("Success.");
-    return blob;
+    const config = { responseType: "blob" };
+    const response = await axios.get(url, config);
+    return response.data;
   } catch (err) {
     console.error(err.name, err.message);
   }

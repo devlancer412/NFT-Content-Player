@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 
-const Select = ({ name, value, items, handleChange }) => {
+const Select = ({ name, value, items, handleChange, disabled = false }) => {
   const selected = value ? value : 0;
   const [expanded, setExpanded] = useState(false);
 
   const toggleExpand = () => {
+    if (disabled) {
+      return;
+    }
     setExpanded(!expanded);
   };
 
@@ -18,6 +21,7 @@ const Select = ({ name, value, items, handleChange }) => {
               type="button"
               onClick={toggleExpand}
               className="relative flex-1 bg-white bg-opacity-30 backdrop-blur-sm appearance-none w-full py-2 px-0 placeholder-gray-400 shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+              disabled={disabled}
             >
               <span className="flex items-center">
                 <span className="ml-3 block truncate">{items[selected]}</span>
