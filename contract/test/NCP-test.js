@@ -90,7 +90,7 @@ describe("NCP", function () {
     const period = Math.floor(dt.getTime() / 1000);
 
     // mint NFT for content
-    await proof.connect(addr1).mint(addr1.address, contentId, period);
+    await proof.connect(addr2).mint(addr1.address, contentId, period);
 
     expect(await proof.hasNFTForContent(addr1.address, contentId)).to.equal(
       true
