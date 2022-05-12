@@ -119,10 +119,10 @@ const ContentViewer = (props) => {
             .map((element, index) => {
               return (
                 <div
-                  className="content-view flex flex-row-reverse w-full mb-10 justify-between"
+                  className="content-view flex flex-row-reverse w-full mb-10 justify-start"
                   key={index}
                 >
-                  <div className="content-detail w-96 flex flex-col justify-between pr-5">
+                  <div className="content-detail flex flex-col justify-between pr-5">
                     <div className="content-header flex flex-col w-full">
                       <div className="content-name w-full text-xl">
                         <div className="w-full">Name: {element.name}</div>
