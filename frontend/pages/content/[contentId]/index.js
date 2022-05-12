@@ -148,7 +148,12 @@ const ContentViewer = (props) => {
                     ) : null}
                     {element.content_type.substr(0, 5) === "video" ? (
                       ownerMode || !element.private ? (
-                        <ReactPlayer src={element.url} />
+                        <ReactPlayer
+                          src={element.url}
+                          controls
+                          width="100%"
+                          height="100%"
+                        />
                       ) : (
                         defaultVideo
                       )

@@ -177,7 +177,7 @@ const ContentManager = () => {
               </div>
               <div className="content-preview lg:w-1/4 w-full mt-5 lg:mt-0">
                 <img
-                  className="w-full h-40 bg-gray-500"
+                  className="w-full bg-gray-500"
                   src={element.content["banner-image"]?.url}
                 />
               </div>
