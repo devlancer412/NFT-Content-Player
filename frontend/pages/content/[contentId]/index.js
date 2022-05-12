@@ -143,7 +143,7 @@ const ContentViewer = (props) => {
                       )
                     ) : null}
                   </div>
-                  <div className="content-detail flex flex-col justify-between pr-5 mr-5">
+                  <div className="content-detail flex flex-col justify-between pl-5 ml-5">
                     <div className="content-header flex flex-col w-full">
                       <div className="content-name w-full text-xl">
                         <div className="w-full">Name: {element.name}</div>
