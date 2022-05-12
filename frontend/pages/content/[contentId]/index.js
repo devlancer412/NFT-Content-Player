@@ -150,7 +150,7 @@ const ContentViewer = (props) => {
                       ownerMode || !element.private ? (
                         <ReactPlayer
                           url={element.url}
-                          controls
+                          controls={true}
                           width="100%"
                           height="100%"
                         />
