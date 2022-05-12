@@ -145,7 +145,7 @@ const ContentManager = () => {
                     </div>
                   </div>
                 </div>
-                <div className="content-edit flex justify-between font-semibold flex-col lg:flex-row">
+                <div className="content-edit flex justify-between font-semibold flex-col lg:flex-row my-2">
                   <div className="content-ct flex justify-start flex-col lg:flex-row align-middle mt-2 md:mt-0">
                     <Link href={`/content/${element.content_id}`}>
                       <Button
@@ -155,7 +155,6 @@ const ContentManager = () => {
                         className="bg-white rounded-full text-black py-1 lg:mr-3 mr-0 mb-2"
                       />
                     </Link>
-
                     <Button
                       size="base"
                       icon={<FontAwesomeIcon icon={faExternalLinkAlt} />}
@@ -164,6 +163,7 @@ const ContentManager = () => {
                       className="bg-white rounded-full text-black py-1 mr-0 mb-2"
                     />
                   </div>
+
                   <div className="content-ct flex flex-row justify-end">
                     <Button
                       size="base"

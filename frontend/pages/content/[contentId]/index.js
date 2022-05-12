@@ -131,15 +131,15 @@ const ContentViewer = (props) => {
                       )
                     ) : null}
                     {element.content_type.substr(0, 5) === "video" ? (
-                      ownerMode || !element.private ? (
+                      ownerMode || element.private ? (
+                        defaultVideo
+                      ) : (
                         <ReactPlayer
                           url={element.url}
                           controls={true}
                           width="100%"
                           height="100%"
                         />
-                      ) : (
-                        defaultVideo
                       )
                     ) : null}
                   </div>
@@ -175,24 +175,6 @@ const ContentViewer = (props) => {
             />
           </div>
         </Link>
-        {/* <div className="float-left">
-          <Button
-            size="base"
-            icon={<FontAwesomeIcon icon={faPlus} />}
-            text="Add Blob"
-            onClick={addBlobHandle}
-            className="border border-2 border-indigo-200 text-indigo-600 py-1 w-52"
-          />
-        </div>
-        <div className="float-right">
-          <Button
-            size="base"
-            icon={<FontAwesomeIcon icon={faUpload} />}
-            text="Upload Content"
-            onClick={uploadContentBlobHandle}
-            className="border border-2 border-green-200 text-green-600 py-1 w-52"
-          />
-        </div> */}
       </div>
     </main>
   );
