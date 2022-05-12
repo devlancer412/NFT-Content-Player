@@ -119,25 +119,9 @@ const ContentViewer = (props) => {
             .map((element, index) => {
               return (
                 <div
-                  className="content-view flex flex-row-reverse w-full mb-10 justify-start"
+                  className="content-view flex flex-row w-full mb-10 justify-start"
                   key={index}
                 >
-                  <div className="content-detail flex flex-col justify-between pr-5">
-                    <div className="content-header flex flex-col w-full">
-                      <div className="content-name w-full text-xl">
-                        <div className="w-full">Name: {element.name}</div>
-                        <div className="w-full">
-                          Type: {element.content_type}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="content-edit flex flex-row justify-between font-semibold">
-                      <div className="content-ct flex flex-row justify-start">
-                        {element.private ? "Protected" : "Public"}
-                      </div>
-                      <div className="content-ct flex flex-row justify-end"></div>
-                    </div>
-                  </div>
                   <div className="content-preview w-1/3">
                     {element.content_type.substr(0, 5) === "image" ? (
                       ownerMode && !element.private ? (
@@ -158,6 +142,22 @@ const ContentViewer = (props) => {
                         defaultVideo
                       )
                     ) : null}
+                  </div>
+                  <div className="content-detail flex flex-col justify-between pr-5 mr-5">
+                    <div className="content-header flex flex-col w-full">
+                      <div className="content-name w-full text-xl">
+                        <div className="w-full">Name: {element.name}</div>
+                        <div className="w-full">
+                          Type: {element.content_type}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="content-edit flex flex-row justify-between font-semibold">
+                      <div className="content-ct flex flex-row justify-start">
+                        {element.private ? "Protected" : "Public"}
+                      </div>
+                      <div className="content-ct flex flex-row justify-end"></div>
+                    </div>
                   </div>
                 </div>
               );
