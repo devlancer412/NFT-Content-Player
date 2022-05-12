@@ -2,7 +2,7 @@ import axios from "../utils/http-comon";
 
 export const getContentList = async () => {
   try {
-    const contents = await axios.get("/api/distributor/");
+    const contents = await axios.get("/api/distributor");
 
     return { success: true, data: contents.data };
   } catch (err) {
