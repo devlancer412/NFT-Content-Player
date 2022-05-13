@@ -68,7 +68,7 @@ const BlobUploadManager = () => {
         name: "",
         link: "",
         type: "Video",
-        protected: false,
+        protected: true,
         editable: true,
       })
     );
