@@ -121,7 +121,7 @@ const ContentViewer = (props) => {
               console.log(option);
               return (
                 <div
-                  className="content-view flex flex-row w-full mb-10 justify-start"
+                  className="content-view flex flex-row w-full mb-10 justify-start rounded-md border-2 border-slate-700 p-2"
                   key={index}
                 >
                   <div className="content-preview w-1/3">
