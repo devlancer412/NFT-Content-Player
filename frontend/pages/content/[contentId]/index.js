@@ -123,15 +123,14 @@ const ContentViewer = (props) => {
                   key={index}
                 >
                   <div className="content-preview w-1/3">
-                    {element.content_type.substr(0, 5) === "image" ? (
-                      ownerMode && !element.private ? (
+                    {element.content_type.substr(0, 5) === "image" &&
+                      (ownerMode || !element.private ? (
                         <img src={element.url} />
                       ) : (
                         defaultImage
-                      )
-                    ) : null}
-                    {element.content_type.substr(0, 5) === "video" ? (
-                      ownerMode || element.private ? (
+                      ))}
+                    {element.content_type.substr(0, 5) === "video" &&
+                      (ownerMode ? (
                         <ReactPlayer
                           url={element.url}
                           controls={true}
@@ -140,8 +139,7 @@ const ContentViewer = (props) => {
                         />
                       ) : (
                         defaultVideo
-                      )
-                    ) : null}
+                      ))}
                   </div>
                   <div className="content-detail flex flex-col justify-between pl-5 ml-5">
                     <div className="content-header flex flex-col w-full">
