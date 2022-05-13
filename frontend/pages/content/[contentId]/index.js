@@ -117,6 +117,8 @@ const ContentViewer = (props) => {
           {content.content
             .filter((ele) => ele.name != "banner-image")
             .map((element, index) => {
+              const option = ownerMode || !element.private;
+              console.log(option);
               return (
                 <div
                   className="content-view flex flex-row w-full mb-10 justify-start"
@@ -124,23 +126,15 @@ const ContentViewer = (props) => {
                 >
                   <div className="content-preview w-1/3">
                     {element.content_type.substr(0, 5) === "image" &&
-                      (ownerMode || !element.private ? (
-                        <img src={element.url} />
-                      ) : (
-                        defaultImage
-                      ))}
+                      (option ? <img src={element.url} /> : defaultImage)}
                     {element.content_type.substr(0, 5) === "video" &&
-                      (ownerMode ? (
-                        !element.private ? (
-                          <ReactPlayer
-                            url={element.url}
-                            controls={true}
-                            width="100%"
-                            height="100%"
-                          />
-                        ) : (
-                          defaultVideo
-                        )
+                      (option ? (
+                        <ReactPlayer
+                          url={element.url}
+                          controls={true}
+                          width="100%"
+                          height="100%"
+                        />
                       ) : (
                         defaultVideo
                       ))}
