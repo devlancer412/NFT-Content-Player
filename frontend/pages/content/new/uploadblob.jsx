@@ -173,7 +173,7 @@ const BlobUploadManager = () => {
                           <input
                             type="checkbox"
                             name="type"
-                            value={element.protected}
+                            value={!element.protected}
                             onChange={() =>
                               updateProtectedHandle(index, !element.protected)
                             }
