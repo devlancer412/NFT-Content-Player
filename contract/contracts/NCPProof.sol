@@ -282,7 +282,7 @@ contract NCPProof is ERC721, Ownable {
     }
 
     // return true if 'owner' is owner of contentId.
-    function isOwnerOf(address owner, uint256 contentId)
+    function isDistributorOf(address owner, uint256 contentId)
         public
         view
         returns (bool)
@@ -300,7 +300,7 @@ contract NCPProof is ERC721, Ownable {
         returns (bool)
     {
         return
-            isOwnerOf(owner, contentId) || hasNFTForContent(owner, contentId);
+            isDistributorOf(owner, contentId) || hasNFTForContent(owner, contentId);
     }
 
     // burn a NFT (don't use)
