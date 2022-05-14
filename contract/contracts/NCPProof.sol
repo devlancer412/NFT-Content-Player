@@ -167,7 +167,6 @@ contract NCPProof is ERC721, Ownable {
             isContentDistributorOf(contentId, msg.sender),
             "You can't mint this NFT"
         );
-        require(!hasNFTForContent(to, contentId), "NFT already minted");
 
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
@@ -213,6 +212,13 @@ contract NCPProof is ERC721, Ownable {
         }
 
         return uint256(int256(-1));
+    }
+
+    function getNFTEndTime(uint256 tokenId) public view returns (uint256) {
+        require(ownerOf(tokenId) == address(0), "Doesn't mint yet");
+        require(ownerOf(tokenId) == msg.sender, "You aren't owner of token");
+
+        return _endTimes[tokenId];
     }
 
     // returns a array of bool like hasNFTForContent.
@@ -300,7 +306,8 @@ contract NCPProof is ERC721, Ownable {
         returns (bool)
     {
         return
-            isDistributorOf(owner, contentId) || hasNFTForContent(owner, contentId);
+            isDistributorOf(owner, contentId) ||
+            hasNFTForContent(owner, contentId);
     }
 
     // burn a NFT (don't use)
