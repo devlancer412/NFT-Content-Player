@@ -37,10 +37,11 @@ const ContentList = () => {
     }
   });
 
-  const getContents = async () => {
+  const getContentAndNFTs = async () => {
     dispatch(setLoading(true));
 
     const result = await getPersonalContentList(address);
+    await dispatch(getNFTs(address));
 
     if (result.success) {
       setContents(result.data);
@@ -53,7 +54,7 @@ const ContentList = () => {
 
   useEffect(() => {
     if (address) {
-      getContents();
+      getContentAndNFTs();
     }
   }, [address]);
 
