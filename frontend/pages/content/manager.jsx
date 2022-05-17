@@ -175,7 +175,7 @@ const ContentManager = () => {
                     <Button
                       size="base"
                       icon={<FontAwesomeIcon icon={faExternalLinkAlt} />}
-                      text="Add Distributor"
+                      text="Distribution"
                       onClick={() => addDistributorModal(element)}
                       className="bg-white rounded-full text-black py-1 mr-0 mb-2"
                     />
