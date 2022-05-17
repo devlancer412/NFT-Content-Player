@@ -4,7 +4,7 @@ import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "../../button/Button";
 
-const TransferModalContent = ({ content, handleSubmit }) => {
+const TransferModalContent = ({ content, NFT, handleSubmit }) => {
   const [destAddress, setDestAddress] = useState("");
 
   return (
@@ -17,6 +17,9 @@ const TransferModalContent = ({ content, handleSubmit }) => {
           {content.meta.description}
         </span>
         <span className="w-full break-words mt-3">{content.content_id}</span>
+        <span className="w-full break-words mt-3">
+          {new Date(parseInt(NFT.timestamp) * 1000).toLocaleDateString("en-US")}
+        </span>
       </div>
       <div className="body w-full flex-1 flex flex-col justify-center pb-5">
         <label
@@ -34,8 +37,8 @@ const TransferModalContent = ({ content, handleSubmit }) => {
           required
         />
         <span className="w-full text-gray-400 italic">
-          Transferring the distribution rights will prevent you from minting new
-          copies of the content
+          If you transfer NFT rights, you will not be able to see the data in
+          the content.
         </span>
       </div>
       <div className="w-full flex flex-row justify-end">
@@ -43,7 +46,7 @@ const TransferModalContent = ({ content, handleSubmit }) => {
           size="base"
           icon={<FontAwesomeIcon icon={faExternalLinkAlt} />}
           text="Transfer"
-          onClick={() => handleSubmit(content.content_id, destAddress)}
+          onClick={() => handleSubmit(NFT.tokenId, destAddress)}
           className="border-0 bg-[#0d99ff] text-white py-1 w-40"
         />
       </div>

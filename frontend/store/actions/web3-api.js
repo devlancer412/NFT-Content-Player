@@ -9,6 +9,7 @@ import { setAddress, setError, setLoading } from "./state";
 
 import CONTRACTDATA from "../../abi/NCPProof.json";
 import { faL } from "@fortawesome/free-solid-svg-icons";
+import { SET_NFTS } from "../types";
 
 const abi = CONTRACTDATA.abi;
 
@@ -189,6 +190,48 @@ export const mintNFTForContent =
     }
   };
 
+export const addDistributorForContent =
+  (contentId, address, toAddress) => async (dispatch) => {
+    if (window.web3.currentProvider.selectedAddress != address) {
+      dispatch(
+        setError("Your account has changed, please reconnect to wallet")
+      );
+      return true;
+    }
+
+    dispatch(setLoading(true));
+
+    try {
+      const txHash = await window.proofContract.methods
+        .setDistributor(contentId, toAddress)
+        .send({ from: address });
+
+      let transactionReceipt = null;
+      while (transactionReceipt == null) {
+        // Waiting expectedBlockTime until the transaction is mined
+        transactionReceipt = await window.web3.eth.getTransactionReceipt(
+          txHash
+        );
+        console.log("waiting");
+        await sleep(expectedBlockTime);
+      }
+
+      dispatch(setLoading(false));
+      return true;
+    } catch (err) {
+      console.log(err.code);
+      if (err.code == -32602) {
+        dispatch(setLoading(false));
+        return true;
+      }
+
+      dispatch(setError(err.message));
+
+      dispatch(setLoading(false));
+      return false;
+    }
+  };
+
 export const unLockPrivate = async (address, contentId) => {
   if (window.web3.currentProvider.selectedAddress != address) {
     return {
@@ -197,16 +240,13 @@ export const unLockPrivate = async (address, contentId) => {
     };
   }
 
-  let tokenId, signature, timestamp;
+  let signature, timestamp;
   try {
-    tokenId = await window.proofContract.methods
-      .getNFTForContent(contentId)
+    const accessFlag = await window.proofContract.methods
+      .canSeeProtected(address, contentId)
       .call({ from: address });
 
-    if (
-      tokenId ===
-      "115792089237316195423570985008687907853269984665640564039457584007913129639935"
-    ) {
+    if (!accessFlag) {
       return {
         success: false,
         data: "You aren't NFT owner!, So you can't see private contents",
@@ -216,19 +256,11 @@ export const unLockPrivate = async (address, contentId) => {
     timestamp = Math.floor(Date.now() / 1000);
 
     signature = await window.web3.eth.personal.sign(
-      window.web3.utils.soliditySha3(timestamp, address, tokenId),
+      window.web3.utils.soliditySha3(timestamp, address, contentId),
       address
     );
 
-    tokenId = tokenId.toString(16);
-
-    if (tokenId.length % 2 === 1) {
-      tokenId = "0x0" + tokenId;
-    } else {
-      tokenId = "0x" + tokenId;
-    }
-
-    console.log({ timestamp, address, tokenId, signature });
+    console.log({ timestamp, address, contentId, signature });
   } catch (err) {
     console.log(err);
 
@@ -238,11 +270,9 @@ export const unLockPrivate = async (address, contentId) => {
     };
   }
 
-  console.log({ tokenId, signature, timestamp });
-
   try {
     const result = await axios.get(
-      `/api/content/unlock/${tokenId}?signature=${signature}&timestamp=${timestamp}`
+      `/api/content/unlock/${contentId}?signature=${signature}&timestamp=${timestamp}`
     );
 
     return {
@@ -264,3 +294,91 @@ export const unLockPrivate = async (address, contentId) => {
     }
   }
 };
+
+export const getNFTs = (address) => async (dispatch) => {
+  if (window.web3.currentProvider.selectedAddress != address) {
+    dispatch(setError("Your account has changed, please reconnect to wallet"));
+    return true;
+  }
+
+  dispatch(setLoading(true));
+
+  try {
+    const Result = await window.proofContract.methods
+      .getNFTs(toAddress)
+      .call({ from: address });
+
+    const nfts = Result.filter((nftData) => nftData.contentId.value != "0").map(
+      (nftData) => {
+        return {
+          tokenId: nftData.tokenId.value,
+          contentId: nftData.contentId.value,
+          period: nftData.period.value,
+        };
+      }
+    );
+
+    dispatch({
+      type: SET_NFTS,
+      payload: nfts,
+    });
+
+    dispatch(setLoading(false));
+    return true;
+  } catch (err) {
+    console.log(err.code);
+    if (err.code == -32602) {
+      dispatch(setLoading(false));
+      return true;
+    }
+
+    dispatch(setError(err.message));
+
+    dispatch(setLoading(false));
+    return false;
+  }
+};
+
+export const transferNFT =
+  (tokenId, address, toAddress) => async (dispatch) => {
+    if (window.web3.currentProvider.selectedAddress != address) {
+      dispatch(
+        setError("Your account has changed, please reconnect to wallet")
+      );
+      return true;
+    }
+
+    dispatch(setLoading(true));
+
+    console.log({ tokenId, address, toAddress });
+
+    try {
+      const txHash = await window.proofContract.methods
+        .transferNFTRights(tokenId, toAddress.toLowerCase())
+        .send({ from: address });
+
+      let transactionReceipt = null;
+      while (transactionReceipt == null) {
+        // Waiting expectedBlockTime until the transaction is mined
+        transactionReceipt = await window.web3.eth.getTransactionReceipt(
+          txHash
+        );
+        console.log("waiting");
+        await sleep(expectedBlockTime);
+      }
+
+      dispatch(setLoading(false));
+      return true;
+    } catch (err) {
+      console.log(err);
+      if (err.code == -32602) {
+        dispatch(setLoading(false));
+        return true;
+      }
+
+      dispatch(setError(err.message));
+
+      dispatch(setLoading(false));
+      return false;
+    }
+  };

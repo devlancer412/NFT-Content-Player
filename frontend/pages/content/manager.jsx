@@ -6,9 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faList,
+  faPlus,
   faExternalLinkAlt,
-  faCogs,
+  faHammer,
 } from "@fortawesome/free-solid-svg-icons";
 
 import Modal from "../../components/Form/modal/modal";
@@ -17,17 +17,22 @@ import Button from "../../components/button/Button";
 import { getPersonalContentList } from "../../services/content-api";
 import { setError, setLoading } from "../../store/actions/state";
 
-import TransferModalContent from "../../components/Form/modal/nft-transfer-template";
+import TransferModalContent from "../../components/Form/modal/transfer-template";
+import MintModalContent from "../../components/Form/modal/mint-template";
 
-import { transferNFT, getNFTs } from "../../store/actions/web3-api";
+import {
+  transferDistribution,
+  mintNFTForContent,
+  addDistributorForContent,
+} from "../../store/actions/web3-api";
+import AddDistributorModalContent from "../../components/Form/modal/add-distributor-template";
 
-const ContentList = () => {
+const ContentManager = () => {
   const [contents, setContents] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState(null);
 
   const address = useSelector((store) => store.state.address);
-  const nfts = useSelector((store) => store.nfts);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -57,27 +62,77 @@ const ContentList = () => {
     }
   }, [address]);
 
-  const transferNFTHandle = async (tokenId, toAddress) => {
-    console.log({ tokenId, toAddress });
+  const transferDistributionHandle = async (contentId, toAddress) => {
+    console.log({ contentId, toAddress });
 
     if (!toAddress) {
       return dispatch(setError("Please insert a wallet address"));
     }
 
-    const result = await dispatch(transferNFT(tokenId, address, toAddress));
+    const result = await dispatch(
+      transferDistribution(contentId, address, toAddress)
+    );
 
     if (result) {
-      await dispatch(getNFTs);
+      getContents();
       setShowModal(false);
     }
   };
 
-  const transferModal = (content, NFTdata) => {
+  const mintNFTHandle = async (contentId, toAddress, period) => {
+    console.log({ contentId, toAddress });
+
+    if (!toAddress) {
+      return dispatch(setError("Please insert a wallet address"));
+    }
+
+    const result = await dispatch(
+      mintNFTForContent(contentId, address, toAddress, period)
+    );
+
+    if (result) {
+      setShowModal(false);
+    }
+  };
+
+  const addDistributorHandle = async (contentId, toAddress) => {
+    console.log({ contentId, toAddress });
+
+    if (!toAddress) {
+      return dispatch(setError("Please insert a wallet address"));
+    }
+
+    const result = await dispatch(
+      addDistributorForContent(contentId, address, toAddress)
+    );
+
+    if (result) {
+      setShowModal(false);
+    }
+  };
+
+  const transferModal = (content) => {
     setModalContent(
       <TransferModalContent
         content={content}
-        NFT={NFTdata}
-        handleSubmit={transferNFTHandle}
+        handleSubmit={transferDistributionHandle}
+      />
+    );
+    setShowModal(true);
+  };
+
+  const mintModal = (content) => {
+    setModalContent(
+      <MintModalContent content={content} handleSubmit={mintNFTHandle} />
+    );
+    setShowModal(true);
+  };
+
+  const addDistributorModal = (content) => {
+    setModalContent(
+      <AddDistributorModalContent
+        content={content}
+        handleSubmit={addDistributorHandle}
       />
     );
     setShowModal(true);
@@ -90,7 +145,9 @@ const ContentList = () => {
           <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-sky-400 opacity-75"></span>
           <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
         </span>
-        <h1 className="text-3xl font-bold leading-loose px-5">Contents List</h1>
+        <h1 className="text-3xl font-bold leading-loose px-5">
+          Content Manager
+        </h1>
       </div>
       <div className="main flex flex-col w-full border-y-2 border-[#e6e6e6] h-full flex-1">
         {contents.map((element, index) => {
@@ -112,35 +169,33 @@ const ContentList = () => {
                       {element.content_id}
                     </div>
                   </div>
-                  {nfts
-                    .filter((nft) => nft.contentId == element.content_id)
-                    .map((nft) => {
-                      <div className="mt-2 content-id w-full text-base break-all p-1 rounded-full bg-gradient-to-r from-blue-200 to-transparent flex justify-between">
-                        <div className="bg-clip-text text-transparent bg-gradient-to-r from-[#00000044] to-black pl-5">
-                          {new Date(
-                            parseInt(nft.timestamp) * 1000
-                          ).toLocaleDateString("en-US")}
-                        </div>
-                        <Button
-                          size="base"
-                          icon={<FontAwesomeIcon icon={faExternalLinkAlt} />}
-                          text="Transfer"
-                          onClick={() => transferModal(element, nft)}
-                          className="bg-white rounded-full text-black py-1 mr-0 mb-2"
-                        />
-                      </div>;
-                    })}
                 </div>
                 <div className="content-edit flex justify-between font-semibold flex-col lg:flex-row my-2">
                   <div className="content-ct flex justify-start flex-col lg:flex-row align-middle mt-2 md:mt-0">
-                    <Link href={`/content/${element.content_id}`}>
-                      <Button
-                        size="base"
-                        icon={<FontAwesomeIcon icon={faList} />}
-                        text="Contents"
-                        className="bg-white rounded-full text-black py-1 lg:mr-3 mr-0 mb-2"
-                      />
-                    </Link>
+                    <Button
+                      size="base"
+                      icon={<FontAwesomeIcon icon={faExternalLinkAlt} />}
+                      text="Add Distributor"
+                      onClick={() => addDistributorModal(element)}
+                      className="bg-white rounded-full text-black py-1 mr-0 mb-2"
+                    />
+                    <Button
+                      size="base"
+                      icon={<FontAwesomeIcon icon={faExternalLinkAlt} />}
+                      text="Transfer"
+                      onClick={() => transferModal(element)}
+                      className="bg-white rounded-full text-black py-1 mr-0 mb-2"
+                    />
+                  </div>
+
+                  <div className="content-ct flex flex-row justify-end">
+                    <Button
+                      size="base"
+                      icon={<FontAwesomeIcon icon={faHammer} />}
+                      text="Mint"
+                      onClick={() => mintModal(element)}
+                      className="border-0 bg-[#0d99ff] text-white py-1 br-0 mb-2 w-full sm:w-40 rounded-full"
+                    />
                   </div>
                 </div>
               </div>
@@ -156,11 +211,11 @@ const ContentList = () => {
       </div>
       <div className="footer p-5 w-full bg-indigo-300 bg-opacity-60 backdrop-blur-sm">
         <div className="float-left w-full sm:w-auto">
-          <Link href="/content/manager">
+          <Link href="/content/new/uploadblob">
             <Button
               size="base"
-              icon={<FontAwesomeIcon icon={faCogs} />}
-              text="Content Manage"
+              icon={<FontAwesomeIcon icon={faPlus} />}
+              text="Add Content"
               className="border-0 bg-[#3E5E93] text-white py-1 w-full sm:w-52 rounded-full"
             />
           </Link>
@@ -173,4 +228,4 @@ const ContentList = () => {
   );
 };
 
-export default ContentList;
+export default ContentManager;
