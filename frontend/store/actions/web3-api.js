@@ -305,7 +305,7 @@ export const getNFTs = (address) => async (dispatch) => {
 
   try {
     const Result = await window.proofContract.methods
-      .getNFTs(toAddress)
+      .getNFTs(address)
       .call({ from: address });
 
     const nfts = Result.filter((nftData) => nftData.contentId.value != "0").map(
