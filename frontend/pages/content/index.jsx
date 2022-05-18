@@ -116,20 +116,25 @@ const ContentList = () => {
                   {nfts
                     .filter((nft) => nft.contentId == element.content_id)
                     .map((nft) => {
-                      <div className="mt-2 content-id w-full text-base break-all p-1 rounded-full bg-gradient-to-r from-blue-200 to-transparent flex justify-between">
-                        <div className="bg-clip-text text-transparent bg-gradient-to-r from-[#00000044] to-black pl-5">
-                          {new Date(
-                            parseInt(nft.timestamp) * 1000
-                          ).toLocaleDateString("en-US")}
+                      return (
+                        <div
+                          key={nft.tokenId}
+                          className="mt-2 content-id w-full text-base break-all p-1 rounded-full bg-gradient-to-r from-blue-200 to-transparent flex justify-between"
+                        >
+                          <div className="bg-clip-text text-transparent bg-gradient-to-r from-[#00000044] to-black pl-5">
+                            {new Date(
+                              parseInt(nft.period) * 1000
+                            ).toLocaleDateString("en-US")}
+                          </div>
+                          <Button
+                            size="base"
+                            icon={<FontAwesomeIcon icon={faExternalLinkAlt} />}
+                            text="Transfer"
+                            onClick={() => transferModal(element, nft)}
+                            className="border-0 bg-[#0d99ff] text-white py-1 br-0 mb-2 w-full sm:w-40 rounded-full"
+                          />
                         </div>
-                        <Button
-                          size="base"
-                          icon={<FontAwesomeIcon icon={faExternalLinkAlt} />}
-                          text="Transfer"
-                          onClick={() => transferModal(element, nft)}
-                          className="bg-white rounded-full text-black py-1 mr-0 mb-2"
-                        />
-                      </div>;
+                      );
                     })}
                 </div>
                 <div className="content-edit flex justify-between font-semibold flex-col lg:flex-row my-2">

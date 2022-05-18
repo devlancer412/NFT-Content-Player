@@ -18,7 +18,7 @@ const TransferModalContent = ({ content, NFT, handleSubmit }) => {
         </span>
         <span className="w-full break-words mt-3">{content.content_id}</span>
         <span className="w-full break-words mt-3">
-          {new Date(parseInt(NFT.timestamp) * 1000).toLocaleDateString("en-US")}
+          {new Date(parseInt(NFT.period) * 1000).toLocaleDateString("en-US")}
         </span>
       </div>
       <div className="body w-full flex-1 flex flex-col justify-center pb-5">

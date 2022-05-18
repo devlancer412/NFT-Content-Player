@@ -155,8 +155,7 @@ export const mintNFTForContent =
     dispatch(setLoading(true));
 
     let date = new Date();
-    date.setMonth(date.getMonth() + period);
-
+    date.setMonth(date.getMonth() + parseInt(period));
     const endTime = Math.floor(date.getTime() / 1000);
 
     try {
@@ -295,6 +294,15 @@ export const unLockPrivate = async (address, contentId) => {
   }
 };
 
+function bnToHex(bn) {
+  var base = 16;
+  var hex = BigInt(bn).toString(base);
+  if (hex.length % 2) {
+    hex = "0" + hex;
+  }
+  return "0x" + hex;
+}
+
 export const getNFTs = (address) => async (dispatch) => {
   if (window.web3.currentProvider.selectedAddress != address) {
     dispatch(setError("Your account has changed, please reconnect to wallet"));
@@ -304,19 +312,21 @@ export const getNFTs = (address) => async (dispatch) => {
   dispatch(setLoading(true));
 
   try {
-    const Result = await window.proofContract.methods
+    const result = await window.proofContract.methods
       .getNFTs(address)
       .call({ from: address });
 
-    const nfts = Result.filter((nftData) => nftData.contentId.value != "0").map(
-      (nftData) => {
+    console.log(result);
+
+    const nfts = result
+      .filter((nftData) => nftData.contentId != "0")
+      .map((nftData) => {
         return {
-          tokenId: nftData.tokenId.value,
-          contentId: nftData.contentId.value,
-          period: nftData.period.value,
+          tokenId: nftData.tokenId,
+          contentId: bnToHex(nftData.contentId),
+          period: nftData.period,
         };
-      }
-    );
+      });
 
     dispatch({
       type: SET_NFTS,
