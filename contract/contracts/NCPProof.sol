@@ -33,6 +33,12 @@ contract NCPProof is ERC721, Ownable {
     // nftId -> period.
     mapping(uint256 => uint256) private _endTimes;
 
+    struct NCPNFT {
+        uint256 tokenId;
+        uint256 contentId;
+        uint256 period;
+    }
+
     string private _strBaseTokenURI;
 
     event MintNFT(address indexed _to, uint256 _contentId);
@@ -66,6 +72,10 @@ contract NCPProof is ERC721, Ownable {
 
     // return true if contentId is already used.
     function isSetted(uint256 contentId) public view returns (bool) {
+        if (contentId == 0) {
+            return true;
+        }
+
         return _distributionOwner[contentId] != address(0);
     }
 
@@ -129,22 +139,31 @@ contract NCPProof is ERC721, Ownable {
         _distributors[contentId][addr] = false;
     }
 
-    // // Transfer NFT for contentId to newOwner.
-    // function transferNFTRights(uint256 contentId, address newOwner)
-    //     public
-    //     returns (bool)
-    // {
-    //     uint256 total = countOfNFT();
+    // Get all NFT data from address
+    function getNFTs(address owner) public view returns (NCPNFT[] memory) {
+        uint256 balance = balanceOf(owner);
+        uint256 totalSupply = countOfNFT();
+        NCPNFT[] memory nfts = new NCPNFT[](balance);
 
-    //     for (uint256 token = 0; token < total; token++) {
-    //         if (ownerOf(token) == msg.sender && contentOf(token) == contentId) {
-    //             _transfer(msg.sender, newOwner, token);
-    //             return true;
-    //         }
-    //     }
+        console.log(balance, totalSupply);
+        uint256 index = 0;
+        for (uint256 i = 0; i < totalSupply; i++) {
+            if (ownerOf(i) != owner) {
+                continue;
+            }
 
-    //     return false;
-    // }
+            nfts[index] = NCPNFT(i, contentOf(i), getNFTEndTime(i));
+            index++;
+        }
+
+        return nfts;
+    }
+
+    // Transfer NFT for tokenId to newOwner.
+    function transferNFTRights(uint256 tokenId, address newOwner) public {
+        require(ownerOf(tokenId) == msg.sender, "You aren't NFT owner!");
+        _transfer(msg.sender, newOwner, tokenId);
+    }
 
     // transfer Ownership of contentId to newOwner.
     function transferContentRights(uint256 contentId, address newOwner) public {
@@ -189,33 +208,37 @@ contract NCPProof is ERC721, Ownable {
         uint256 total = countOfNFT();
 
         for (uint256 token = 0; token < total; token++) {
-            if (ownerOf(token) == owner && contentOf(token) == contentId) {
-                return _endTimes[token] >= block.timestamp;
+            if (
+                ownerOf(token) == owner &&
+                contentOf(token) == contentId &&
+                _endTimes[token] >= block.timestamp
+            ) {
+                return true;
             }
         }
 
         return false;
     }
 
-    // return NFT tokenId of msg.sender for contentId
-    function getNFTForContent(uint256 contentId) public view returns (uint256) {
-        uint256 total = countOfNFT();
+    // // return NFT tokenId of msg.sender for contentId
+    // function getNFTForContent(uint256 contentId) public view returns (uint256) {
+    //     uint256 total = countOfNFT();
 
-        for (uint256 token = 0; token < total; token++) {
-            if (
-                ownerOf(token) == msg.sender &&
-                contentOf(token) == contentId &&
-                _endTimes[token] >= block.timestamp
-            ) {
-                return token;
-            }
-        }
+    //     for (uint256 token = 0; token < total; token++) {
+    //         if (
+    //             ownerOf(token) == msg.sender &&
+    //             contentOf(token) == contentId &&
+    //             _endTimes[token] >= block.timestamp
+    //         ) {
+    //             return token;
+    //         }
+    //     }
 
-        return uint256(int256(-1));
-    }
+    //     return uint256(int256(-1));
+    // }
 
     function getNFTEndTime(uint256 tokenId) public view returns (uint256) {
-        require(ownerOf(tokenId) == address(0), "Doesn't mint yet");
+        require(ownerOf(tokenId) != address(0), "Doesn't mint yet");
         require(ownerOf(tokenId) == msg.sender, "You aren't owner of token");
 
         return _endTimes[tokenId];

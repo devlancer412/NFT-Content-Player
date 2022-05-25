@@ -34,7 +34,7 @@ describe("NCP", function () {
   it("Set addr1 to distributor server", async function () {
     await proof.setContentServer(owner.address, true);
 
-    const contentId = 0;
+    const contentId = await proof.newContentId();
     expect(await proof.isSetted(contentId)).to.equal(false);
 
     let messageHash = ethers.utils.solidityKeccak256(
@@ -87,7 +87,7 @@ describe("NCP", function () {
 
     let dt = new Date();
     dt.setSeconds(dt.getSeconds() + 10);
-    const period = Math.floor(dt.getTime() / 1000);
+    let period = Math.floor(dt.getTime() / 1000);
 
     // mint NFT for content
     await proof.connect(addr2).mint(addr1.address, contentId, period);
@@ -107,6 +107,10 @@ describe("NCP", function () {
       false
     );
 
+    dt.setMonth(dt.getMonth() + 1);
+    period = Math.floor(dt.getTime() / 1000);
+    await proof.connect(addr2).mint(addr1.address, contentId, period);
+
     await proof.connect(addr1).transferContentRights(contentId, addr2.address);
 
     expect(
@@ -117,5 +121,8 @@ describe("NCP", function () {
     ).to.equal(true);
 
     expect(await proof.contentOwnerOf(contentId)).to.equal(addr2.address);
+
+    const result = await proof.connect(addr1).getNFTs(addr1.address);
+    console.log(result);
   });
 });
